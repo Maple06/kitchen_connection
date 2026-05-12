@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-maroon: #800000;
+  --color-maroon-dark: #4d0000;
+  --color-maroon-light: #b30000;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #fcfcfc;
+  color: #333333;
+}
