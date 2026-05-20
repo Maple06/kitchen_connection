@@ -11,3 +11,26 @@ body {
   background-color: #fcfcfc;
   color: #333333;
 }
+
+/* ── Contextual Navbar Portal Link ─────────────────────────────── */
+.nav-portal-link {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-maroon);
+  transition: opacity 0.15s, text-decoration-color 0.15s;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+}
+.nav-portal-link:hover {
+  opacity: 0.75;
+  text-decoration-color: var(--color-maroon);
+}
+/* Admin: deeper maroon — hints at elevated role */
+.nav-portal-link--admin {
+  color: var(--color-maroon-dark);
+}
+/* Client: lighter maroon */
+.nav-portal-link--client {
+  color: var(--color-maroon-light);
+}

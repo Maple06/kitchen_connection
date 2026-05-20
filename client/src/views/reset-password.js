@@ -1,3 +1,4 @@
+import { API_URL } from '../config.js';
 export const renderResetPassword = (container, query) => {
   const urlParams = new URLSearchParams(query);
   const token = urlParams.get('token');
@@ -26,11 +27,11 @@ export const renderResetPassword = (container, query) => {
           <input type="hidden" id="rp-token" value="${token}">
           <div class="rounded-md shadow-sm space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Sandi Baru</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Sandi Baru <span class="text-red-500">*</span></label>
               <input id="rp-pass" type="password" required class="appearance-none rounded-lg block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-maroon focus:border-maroon sm:text-sm">
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Sandi Baru</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Sandi Baru <span class="text-red-500">*</span></label>
               <input id="rp-confirm" type="password" required class="appearance-none rounded-lg block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-maroon focus:border-maroon sm:text-sm">
             </div>
           </div>
@@ -67,7 +68,7 @@ export const renderResetPassword = (container, query) => {
       btn.disabled = true;
 
       try {
-        const res = await fetch('http://localhost:5000/api/auth/reset-password', {
+        const res = await fetch(`${API_URL}/auth/reset-password`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: tokenVal, newPassword: pass })

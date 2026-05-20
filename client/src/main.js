@@ -1,3 +1,4 @@
+import { API_URL } from './config.js';
 import './style.css';
 import { renderHome } from './views/home.js';
 import { renderServices } from './views/services.js';
@@ -19,7 +20,7 @@ window.currentUser = null;
 // Fetch current user from cookie
 const fetchAuth = async () => {
   try {
-    const res = await fetch('http://localhost:5000/api/auth/me', { credentials: 'include' });
+    const res = await fetch(`${API_URL}/auth/me`, { credentials: 'include' });
     if (res.ok) {
       const data = await res.json();
       window.currentUser = data.user;
@@ -36,7 +37,7 @@ const fetchAuth = async () => {
 
 window.logout = async () => {
   try {
-    await fetch('http://localhost:5000/api/auth/logout', { method: 'POST', credentials: 'include' });
+    await fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
     window.currentUser = null;
     updateNav(null);
     window.location.hash = '#/';
@@ -48,12 +49,31 @@ window.logout = async () => {
 const updateNav = (user) => {
   const authLinks = document.getElementById('nav-auth-links');
   const navHome = document.getElementById('nav-home');
+  const navPortal = document.getElementById('nav-portal-link');
 
   if (navHome) {
     if (user) {
       navHome.href = (user.role === 'admin' || user.role === 'superadmin') ? '#admin' : '#dashboard';
     } else {
       navHome.href = '#/';
+    }
+  }
+
+  if (navPortal) {
+    // Always reset modifier classes first
+    navPortal.classList.remove('nav-portal-link--admin', 'nav-portal-link--client');
+
+    if (!user) {
+      navPortal.href = '#/';
+      navPortal.textContent = 'Beranda';
+    } else if (user.role === 'admin' || user.role === 'superadmin') {
+      navPortal.href = '#admin';
+      navPortal.innerHTML = '<i class="fa-solid fa-terminal text-xs mr-1"></i>Konsol';
+      navPortal.classList.add('nav-portal-link--admin');
+    } else {
+      navPortal.href = '#dashboard';
+      navPortal.innerHTML = '<i class="fa-solid fa-gauge text-xs mr-1"></i>Dashboard';
+      navPortal.classList.add('nav-portal-link--client');
     }
   }
 
@@ -100,11 +120,12 @@ const updateNav = (user) => {
 
 // Simple Hash Router
 const router = async () => {
+  window.scrollTo(0, 0);
   const hashObj = new URL(window.location.href);
   const hashPath = hashObj.hash.split('?')[0] || '#/';
   const hashQuery = hashObj.hash.split('?')[1] || '';
   
-  app.innerHTML = '<div class="flex justify-center items-center py-20"><i class="fa-solid fa-spinner fa-spin-pulse text-maroon text-4xl"></i></div>';
+  app.innerHTML = '<div class="flex justify-center items-center min-h-[60vh]"><i class="fa-solid fa-spinner fa-spin-pulse text-maroon text-4xl"></i></div>';
   
   // Wait for auth check before rendering protected routes
   if (hashPath === '#dashboard' || hashPath === '#admin' || hashPath === '#account') {

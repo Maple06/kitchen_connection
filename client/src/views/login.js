@@ -1,3 +1,4 @@
+import { API_URL } from '../config.js';
 export const renderLogin = (container, query) => {
   if (window.currentUser) {
     if(window.currentUser.role === 'admin' || window.currentUser.role === 'superadmin') {
@@ -42,12 +43,12 @@ export const renderLogin = (container, query) => {
           <form class="col-start-1 row-start-1 space-y-6 transition-all duration-300 transform" id="login-form">
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
                 <input id="email-address" type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon sm:text-sm">
               </div>
               <div>
                 <div class="flex justify-between items-center mb-1">
-                  <label class="block text-sm font-medium text-gray-700">Kata Sandi</label>
+                  <label class="block text-sm font-medium text-gray-700">Kata Sandi <span class="text-red-500">*</span></label>
                   <button type="button" id="btn-forgot-password" class="text-sm font-medium text-maroon hover:underline focus:outline-none">Lupa Sandi?</button>
                 </div>
                 <div class="relative">
@@ -58,27 +59,24 @@ export const renderLogin = (container, query) => {
                 </div>
               </div>
             </div>
-            <button type="submit" id="login-btn" class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md">
+            <button type="submit" id="login-btn" class="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md">
               Masuk ke Portal
             </button>
-            <div class="text-center mt-4">
-              <p class="text-sm text-gray-600">Belum punya akun? <button type="button" id="link-to-register" class="font-medium text-maroon hover:underline focus:outline-none">Daftar sekarang</button></p>
-            </div>
           </form>
 
           <!-- Register Form -->
           <form class="col-start-1 row-start-1 space-y-6 transition-all duration-300 transform opacity-0 translate-x-12 pointer-events-none" id="register-form">
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
                 <input id="reg-name" type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon sm:text-sm">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
                 <input id="reg-email" type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon sm:text-sm">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi <span class="text-red-500">*</span></label>
                 <div class="relative">
                   <input id="reg-pass" type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon sm:text-sm pr-10">
                   <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-maroon focus:outline-none toggle-password" data-target="reg-pass">
@@ -87,7 +85,7 @@ export const renderLogin = (container, query) => {
                 </div>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Kata Sandi</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Kata Sandi <span class="text-red-500">*</span></label>
                 <div class="relative">
                   <input id="reg-pass-confirm" type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon sm:text-sm pr-10">
                   <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-maroon focus:outline-none toggle-password" data-target="reg-pass-confirm">
@@ -96,12 +94,9 @@ export const renderLogin = (container, query) => {
                 </div>
               </div>
             </div>
-            <button type="submit" id="register-btn" class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md">
+            <button type="submit" id="register-btn" class="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md">
               Buat Akun Baru
             </button>
-            <div class="text-center mt-4">
-              <p class="text-sm text-gray-600">Sudah punya akun? <button type="button" id="link-to-login" class="font-medium text-maroon hover:underline focus:outline-none">Masuk di sini</button></p>
-            </div>
           </form>
 
           <!-- Forgot Password Form -->
@@ -110,7 +105,7 @@ export const renderLogin = (container, query) => {
               <p class="text-sm text-gray-500">Masukkan email Anda untuk menerima tautan reset.</p>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
               <input id="forgot-email" type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon sm:text-sm">
             </div>
             <div class="space-y-3">
@@ -244,11 +239,11 @@ export const renderLogin = (container, query) => {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('login-btn');
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Memproses...';
       btn.disabled = true;
 
       try {
-        const res = await fetch('http://localhost:5000/api/auth/login', {
+        const res = await fetch(`${API_URL}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -290,11 +285,11 @@ export const renderLogin = (container, query) => {
       }
 
       const btn = document.getElementById('register-btn');
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Memproses...';
       btn.disabled = true;
 
       try {
-        const res = await fetch('http://localhost:5000/api/auth/register', {
+        const res = await fetch(`${API_URL}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -330,7 +325,7 @@ export const renderLogin = (container, query) => {
       btn.disabled = true;
 
       try {
-        const res = await fetch('http://localhost:5000/api/auth/forgot-password', {
+        const res = await fetch(`${API_URL}/auth/forgot-password`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: document.getElementById('forgot-email').value })

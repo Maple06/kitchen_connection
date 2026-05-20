@@ -1,3 +1,4 @@
+import { API_URL } from '../config.js';
 export const renderCatalog = async (container) => {
   container.innerHTML = `
     <div class="bg-maroon py-12">
@@ -51,7 +52,7 @@ export const renderCatalog = async (container) => {
   `;
 
   try {
-    const res = await fetch('http://localhost:5000/api/equipments');
+    const res = await fetch(`${API_URL}/equipments`);
     const equipments = await res.json();
     
     const grid = document.getElementById('catalog-grid');

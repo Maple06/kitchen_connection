@@ -1,3 +1,4 @@
+import { API_URL } from '../config.js';
 export const renderVerify = async (container, query) => {
   container.innerHTML = `
     <div class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
@@ -24,7 +25,7 @@ export const renderVerify = async (container, query) => {
   }
 
   try {
-    const res = await fetch('http://localhost:5000/api/auth/verify', {
+    const res = await fetch(`${API_URL}/auth/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token })

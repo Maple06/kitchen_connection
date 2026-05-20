@@ -12,7 +12,7 @@ export const renderChecklist = (container) => {
         <form id="checklist-form" class="space-y-6">
           <!-- Question 1 -->
           <div>
-            <label class="block text-gray-700 font-bold mb-2">1. Apa fokus utama dapur Anda?</label>
+            <label class="block text-gray-700 font-bold mb-2">1. Apa fokus utama dapur Anda? <span class="text-red-500">*</span></label>
             <div class="space-y-2">
               <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                 <input type="radio" name="focus" value="commercial" class="text-maroon focus:ring-maroon h-4 w-4" required>
@@ -31,7 +31,7 @@ export const renderChecklist = (container) => {
 
           <!-- Question 2 -->
           <div>
-            <label class="block text-gray-700 font-bold mb-2">2. Berapa perkiraan ukuran area dapur Anda?</label>
+            <label class="block text-gray-700 font-bold mb-2">2. Berapa perkiraan ukuran area dapur Anda? <span class="text-red-500">*</span></label>
             <select name="size" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon bg-white" required>
               <option value="">Pilih ukuran...</option>
               <option value="small">Di bawah 20 m²</option>
