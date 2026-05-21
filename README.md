@@ -6,7 +6,7 @@
 
 [![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Vite](https://img.shields.io/badge/Frontend-Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
-[![Azure SQL](https://img.shields.io/badge/Database-Azure%20SQL-0078D4)](https://azure.microsoft.com/en-us/products/azure-sql/database)
+[![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com)
 [![Google Cloud](https://img.shields.io/badge/Hosting-Cloud%20Run-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
 
 [Demo Langsung](https://kitchenconnection.id) · [Laporkan Bug](https://github.com/Maple06/kitchen_connection/issues) · [Ajukan Fitur](https://github.com/Maple06/kitchen_connection/issues)
@@ -60,9 +60,9 @@ kitchen_connection/
 │
 ├── server/                  # REST API Express.js
 │   ├── index.js             # Semua route & middleware
-│   ├── db.js                # Adaptor DB multi-mode (Azure SQL / MySQL)
-│   ├── init_db.js           # Inisialisasi skema
-│   └── seed.js              # Data awal (seed)
+│   ├── db.js                # Koneksi DB (MySQL via mysql2)
+│   ├── init_db.js           # (Opsional) inisialisasi skema untuk lokal
+│   └── seed.js              # Seeder (backup lokal + reset tabel + seed)
 │
 ├── Dockerfile.client        # Server file statis Nginx
 ├── Dockerfile.server        # Container API Node.js
@@ -78,7 +78,7 @@ kitchen_connection/
 |---|---|
 | **Frontend** | Vite, Vanilla JS, TailwindCSS v4 |
 | **Backend** | Node.js, Express.js v5 |
-| **Database** | Azure SQL (produksi) / MySQL XAMPP (lokal) |
+| **Database** | MySQL (Aiven untuk produksi) / MySQL (lokal) |
 | **Penyimpanan File** | Google Cloud Storage |
 | **Autentikasi** | JWT (HTTP-only cookies) |
 | **Email** | Brevo (SMTP relay) |
@@ -94,7 +94,7 @@ kitchen_connection/
 - Node.js `>= 18`
 - Docker Desktop
 - Google Cloud SDK (`gcloud`)
-- XAMPP (untuk mode MySQL lokal) atau akses Azure SQL
+- MySQL lokal (opsional) atau Aiven MySQL
 
 ### 1. Clone Repositori
 
@@ -105,6 +105,10 @@ cd kitchen_connection
 
 ### 2. Konfigurasi Environment Server
 
+> Ringkas:
+> - `server/.env` dipakai saat menjalankan server **secara lokal**.
+> - `env.yaml` dipakai saat **deploy** ke Cloud Run via `--env-vars-file`.
+
 ```bash
 cp server/.env.example server/.env
 ```
@@ -112,18 +116,12 @@ cp server/.env.example server/.env
 Edit `server/.env`:
 
 ```env
-# Mode database (pilih salah satu)
-APP_MODE=local_xampp          # atau: local_azure / deployment
+# Mode aplikasi
+APP_MODE=local                # local / deployment
 
-# Azure SQL (jika menggunakan local_azure atau deployment)
-DB_SERVER=your-server.database.windows.net
-DB_USER=your_user
-DB_PASSWORD=your_password
-DB_NAME=kitchenconnection
-DB_PORT=1433
-
-# MySQL / XAMPP (jika menggunakan local_xampp)
-DB_HOST=localhost
+# MySQL (lokal atau Aiven)
+DB_SERVER=localhost           # atau host Aiven
+DB_PORT=3306                  # atau port Aiven
 DB_USER=root
 DB_PASSWORD=
 DB_NAME=kitchenconnection
@@ -139,11 +137,24 @@ BREVO_PASS=your_brevo_api_key
 
 ### 3. Inisialisasi & Seed Database
 
+> ⚠️ `npm run seed` bersifat **destruktif**: seeder akan melakukan backup data ke file JSON lokal (tersimpan di folder `server/backup-*.json`), lalu me-reset tabel (drop & recreate) dan mengisi ulang data contoh.
+
 ```bash
 cd server
 npm install
-npm run init-db   # Membuat tabel
-npm run seed      # Mengisi data awal
+npm run seed      # Backup lokal + reset tabel + seed data contoh
+
+# (opsional) jika ingin hanya inisialisasi skema lokal
+# npm run init-db
+
+```
+
+#### Seed Aiven menggunakan `env.yaml` (deployment)
+
+Jika Anda menyimpan variabel produksi di `env.yaml` (root project) untuk Cloud Run, Anda bisa seed Aiven **sekali** dari root:
+
+```powershell
+./seed.ps1
 ```
 
 ### 4. Jalankan Backend
@@ -192,16 +203,26 @@ Buat file `env.yaml` (gitignored — **jangan di-commit**):
 
 ```yaml
 APP_MODE: "deployment"
-DB_SERVER: "your-server.database.windows.net"
-DB_USER: "your_user"
+DB_SERVER: "your-aiven-host.aivencloud.com"
+DB_USER: "avnadmin"
 DB_PASSWORD: "your_password"
-DB_NAME: "kitchenconnection"
-DB_PORT: "1433"
+DB_NAME: "defaultdb"
+DB_PORT: "15530"
 FRONTEND_URL: "https://your-client-url.run.app"
 JWT_SECRET: "your_secret"
 BREVO_USER: "your@email.com"
 BREVO_PASS: "your_brevo_key"
 ```
+
+### Endpoint Health Check (UptimeRobot)
+
+API menyediakan endpoint ringan untuk monitoring:
+
+- `GET /ping` → melakukan `SELECT 1` ke DB dan mengembalikan `{ ok: true }` jika sehat.
+
+### Catatan: Error izin image / beda project
+
+Jika deploy Cloud Run gagal dengan error seperti “service-xxxxx@serverless-robot-prod.iam.gserviceaccount.com must have permission to read the image”, biasanya karena image berada di project berbeda dari target deploy. Pastikan `GCP_PROJECT_ID` di `deploy.env` adalah project yang sama dengan image registry, atau berikan izin read Artifact Registry ke Cloud Run service agent project target.
 
 ### 3. Jalankan Skrip Deployment
 
@@ -224,9 +245,9 @@ Pilih dari menu interaktif:
 
 | Role | Email | Kata Sandi |
 |---|---|---|
-| Superadmin | `superadmin@kitchenconnection.com` | `superadmin123` |
-| Admin | `admin@kitchenconnection.com` | `admin123` |
-| Klien | `client@kitchenconnection.com` | `client123` |
+| Superadmin | `malendra@kitchenconnection.id` | `password123` |
+| Admin | `sara@kitchenconnection.id` | `password123` |
+| Klien | `john@example.com` | `password123` |
 
 ---
 

@@ -69,6 +69,18 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Lightweight health check for uptime monitors (hits DB with a tiny query)
+app.get('/ping', async (req, res) => {
+    try {
+        await db.query('SELECT 1 AS ok');
+        res.set('Cache-Control', 'no-store');
+        res.json({ ok: true, ts: new Date().toISOString() });
+    } catch (error) {
+        res.set('Cache-Control', 'no-store');
+        res.status(500).json({ ok: false, ts: new Date().toISOString() });
+    }
+});
+
 // Verify JWT Middleware
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token;

@@ -18,24 +18,51 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20">
           <div class="flex items-center">
-            <a href="/" class="flex-shrink-0 flex items-center gap-2 cursor-pointer" id="nav-home">
+            <a href="#/" class="flex-shrink-0 flex items-center gap-2 cursor-pointer" id="nav-home">
               <i class="fa-solid fa-fire-burner text-maroon text-3xl"></i>
               <span class="font-bold text-2xl text-maroon">Kitchen Connection</span>
             </a>
           </div>
-          <div class="hidden sm:flex sm:items-center sm:space-x-8">
+          <!-- Desktop menu (lg+) -->
+          <div class="hidden lg:flex lg:items-center lg:space-x-8">
+            <!-- Contextual portal link: Beranda / Dashboard -->
+            <a id="nav-portal-link" href="#/" class="nav-portal-link" data-link>Beranda</a>
+
             <a href="#services" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Layanan</a>
             <a href="#catalog" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Katalog Alat</a>
             <a href="#checklist" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Checklist Keamanan</a>
             <a href="#reservation" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Reservasi</a>
 
-            <!-- Contextual portal link: Beranda / Dashboard / Konsol -->
-            <a id="nav-portal-link" href="#/" class="nav-portal-link" data-link>Beranda</a>
-
             <div id="nav-auth-links" class="flex items-center space-x-4">
               <a href="#login?tab=login" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Masuk</a>
               <a href="#login?tab=register" class="bg-maroon hover:bg-maroon-dark text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm" data-link>
                 Mulai Disini <i class="fa-solid fa-arrow-right ml-1"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Hamburger button (sm/md) -->
+          <div class="flex items-center lg:hidden">
+            <button id="nav-menu-button" type="button" class="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:text-maroon hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-maroon" aria-controls="nav-mobile-menu" aria-expanded="false">
+              <span class="sr-only">Buka menu</span>
+              <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile menu (sm/md) -->
+        <div id="nav-mobile-menu" class="lg:hidden hidden border-t border-gray-100 pb-4">
+          <div class="pt-4 flex flex-col space-y-3">
+            <a id="nav-portal-link-mobile" href="#/" class="nav-portal-link" data-link>Beranda</a>
+            <a href="#services" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Layanan</a>
+            <a href="#catalog" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Katalog Alat</a>
+            <a href="#checklist" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Checklist Keamanan</a>
+            <a href="#reservation" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Reservasi</a>
+
+            <div id="nav-auth-links-mobile" class="flex flex-col space-y-3 pt-2">
+              <a href="#login?tab=login" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Masuk</a>
+              <a href="#login?tab=register" class="bg-maroon hover:bg-maroon-dark text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm inline-flex items-center justify-center" data-link>
+                Mulai Disini <i class="fa-solid fa-arrow-right ml-2"></i>
               </a>
             </div>
           </div>
@@ -71,13 +98,13 @@
             <h3 class="font-bold text-lg mb-4">Kontak</h3>
             <ul class="space-y-2 text-sm text-gray-400">
               <li><i class="fa-solid fa-envelope w-5"></i> halo@kitchenconnection.com</li>
-              <li><i class="fa-solid fa-phone w-5"></i> +62 812-3456-7890</li>
-              <li><i class="fa-solid fa-location-dot w-5"></i> Jakarta, Indonesia</li>
+              <li><i class="fa-solid fa-phone w-5"></i> +62 813-2039-2414</li>
+              <li><i class="fa-solid fa-location-dot w-5"></i> Bandung, Indonesia</li>
             </ul>
           </div>
         </div>
         <div class="mt-8 border-t border-gray-800 pt-8 flex items-center justify-between">
-          <p class="text-gray-400 text-sm">&copy; 2026 Kitchen Connection. Hak Cipta Dilindungi.</p>
+          <p class="text-gray-400 text-sm">&copy; 2026 Kitchen Connection & TriNetra. Hak Cipta Dilindungi.</p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-white"><i class="fa-brands fa-instagram text-xl"></i></a>
             <a href="#" class="text-gray-400 hover:text-white"><i class="fa-brands fa-linkedin text-xl"></i></a>

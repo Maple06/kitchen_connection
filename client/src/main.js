@@ -48,8 +48,10 @@ window.logout = async () => {
 
 const updateNav = (user) => {
   const authLinks = document.getElementById('nav-auth-links');
+  const authLinksMobile = document.getElementById('nav-auth-links-mobile');
   const navHome = document.getElementById('nav-home');
   const navPortal = document.getElementById('nav-portal-link');
+  const navPortalMobile = document.getElementById('nav-portal-link-mobile');
 
   if (navHome) {
     if (user) {
@@ -68,31 +70,52 @@ const updateNav = (user) => {
       navPortal.textContent = 'Beranda';
     } else if (user.role === 'admin' || user.role === 'superadmin') {
       navPortal.href = '#admin';
-      navPortal.innerHTML = '<i class="fa-solid fa-terminal text-xs mr-1"></i>Konsol';
+      navPortal.textContent = 'Dashboard';
       navPortal.classList.add('nav-portal-link--admin');
     } else {
       navPortal.href = '#dashboard';
-      navPortal.innerHTML = '<i class="fa-solid fa-gauge text-xs mr-1"></i>Dashboard';
+      navPortal.textContent = 'Dashboard';
       navPortal.classList.add('nav-portal-link--client');
     }
   }
 
-  if (authLinks) {
+  if (navPortalMobile) {
+    navPortalMobile.classList.remove('nav-portal-link--admin', 'nav-portal-link--client');
+
+    if (!user) {
+      navPortalMobile.href = '#/';
+      navPortalMobile.textContent = 'Beranda';
+    } else if (user.role === 'admin' || user.role === 'superadmin') {
+      navPortalMobile.href = '#admin';
+      navPortalMobile.textContent = 'Dashboard';
+      navPortalMobile.classList.add('nav-portal-link--admin');
+    } else {
+      navPortalMobile.href = '#dashboard';
+      navPortalMobile.textContent = 'Dashboard';
+      navPortalMobile.classList.add('nav-portal-link--client');
+    }
+  }
+
+  const renderAuthLinks = (targetEl) => {
+    if (!targetEl) return;
+
+    const menuButtonId = `profile-menu-button-${targetEl.id || 'auth'}`;
+
     if (user) {
       const getInitials = (name) => {
         const names = name.split(' ');
         return names.map(n => n[0]).join('').substring(0, 2).toUpperCase();
       };
 
-      authLinks.innerHTML = `
+      targetEl.innerHTML = `
         <div class="relative inline-block text-left group">
-          <button type="button" class="flex items-center justify-center w-10 h-10 rounded-full bg-maroon text-white font-bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-maroon transition-transform transform hover:scale-105" id="profile-menu-button">
+          <button type="button" class="flex items-center justify-center w-10 h-10 rounded-full bg-maroon text-white font-bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-maroon transition-transform transform hover:scale-105" id="${menuButtonId}">
             ${getInitials(user.name)}
           </button>
           
           <!-- Dropdown menu -->
           <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
-            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="profile-menu-button">
+            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="${menuButtonId}">
               <div class="px-4 py-2 border-b border-gray-100">
                 <p class="text-sm font-medium text-gray-900 truncate">${user.name}</p>
                 <p class="text-xs text-gray-500 capitalize">${user.role}</p>
@@ -108,14 +131,17 @@ const updateNav = (user) => {
         </div>
       `;
     } else {
-      authLinks.innerHTML = `
+      targetEl.innerHTML = `
         <a href="#login?tab=login" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Masuk</a>
         <a href="#login?tab=register" class="bg-maroon hover:bg-maroon-dark text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm" data-link>
           Mulai Disini <i class="fa-solid fa-arrow-right ml-1"></i>
         </a>
       `;
     }
-  }
+  };
+
+  renderAuthLinks(authLinks);
+  renderAuthLinks(authLinksMobile);
 };
 
 // Simple Hash Router
@@ -180,6 +206,33 @@ window.addEventListener('hashchange', router);
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
   await fetchAuth();
+
+  const mobileMenu = document.getElementById('nav-mobile-menu');
+  const mobileMenuButton = document.getElementById('nav-menu-button');
+
+  const setMobileMenuOpen = (open) => {
+    if (!mobileMenu || !mobileMenuButton) return;
+    mobileMenu.classList.toggle('hidden', !open);
+    mobileMenuButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  if (mobileMenuButton) {
+    mobileMenuButton.addEventListener('click', () => {
+      const isOpen = mobileMenu && !mobileMenu.classList.contains('hidden');
+      setMobileMenuOpen(!isOpen);
+    });
+  }
+
+  // Close mobile menu when navigating
+  window.addEventListener('hashchange', () => setMobileMenuOpen(false));
+  if (mobileMenu) {
+    mobileMenu.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target && target.closest && target.closest('a')) {
+        setMobileMenuOpen(false);
+      }
+    });
+  }
   
   const links = document.querySelectorAll('[data-link]');
   links.forEach(link => {

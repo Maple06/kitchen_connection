@@ -58,6 +58,7 @@ if ($deployClient) {
 
     gcloud run deploy $SERVICE_CLIENT `
         --image $CLIENT_IMAGE_TAG `
+        --project $GCP_PROJECT_ID `
         --platform managed `
         --region $GCP_REGION `
         --allow-unauthenticated
@@ -78,6 +79,7 @@ if ($deployServer) {
 
     gcloud run deploy $SERVICE_SERVER `
         --image $SERVER_IMAGE_TAG `
+        --project $GCP_PROJECT_ID `
         --platform managed `
         --region $GCP_REGION `
         --allow-unauthenticated `
