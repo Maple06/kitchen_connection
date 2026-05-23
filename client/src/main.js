@@ -198,6 +198,32 @@ const router = async () => {
     default:
       app.innerHTML = `<div class="p-20 text-center"><h1 class="text-4xl font-bold">404 - Halaman Tidak Ditemukan</h1></div>`;
   }
+  
+  // Re-initialize IntersectionObserver for scroll animations after route render
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+  
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-fade-in-up');
+        entry.target.classList.remove('opacity-0');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  setTimeout(() => {
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
+    revealElements.forEach(el => {
+      // Ensure elements start hidden if JS is active
+      el.classList.add('opacity-0');
+      observer.observe(el);
+    });
+  }, 100);
 };
 
 // Listen to hash changes
