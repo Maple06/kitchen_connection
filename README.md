@@ -6,7 +6,7 @@
 
 [![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Vite](https://img.shields.io/badge/Frontend-Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
-[![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com)
+[![Aiven for MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?logo=mysql&logoColor=white)](https://aiven.io/)
 [![Google Cloud](https://img.shields.io/badge/Hosting-Cloud%20Run-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
 
 [Demo Langsung](https://kitchenconnection.id) · [Laporkan Bug](https://github.com/Maple06/kitchen_connection/issues) · [Ajukan Fitur](https://github.com/Maple06/kitchen_connection/issues)
