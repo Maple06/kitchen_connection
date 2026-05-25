@@ -125,6 +125,70 @@ export const renderHome = (container) => {
             <a href="#catalog" class="text-maroon font-semibold hover:underline">Lihat Katalog <i class="fa-solid fa-arrow-right text-sm ml-1"></i></a>
           </div>
         </div>
+
+        <!-- Layanan Lainnya Section -->
+        <div class="text-center mt-20 mb-8 reveal-on-scroll" style="animation-delay: 0.4s; animation-fill-mode: both;">
+          <h3 class="text-xl font-bold text-gray-500 tracking-wider uppercase">Layanan Lainnya</h3>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-4 md:gap-5 reveal-on-scroll max-w-4xl mx-auto" style="animation-delay: 0.5s; animation-fill-mode: both;">
+          
+          <!-- Pill 1 -->
+          <div class="relative group bg-white border border-gray-200 rounded-full px-6 py-3 shadow-sm hover:shadow-md hover:border-maroon transition-all cursor-default text-gray-700 font-medium">
+            <span>Digital Marketing & Social Media</span>
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-xl">
+              Strategi promosi online, manajemen media sosial, hingga kampanye digital untuk meningkatkan awareness dan engagement.
+              <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+
+          <!-- Pill 2 -->
+          <div class="relative group bg-white border border-gray-200 rounded-full px-6 py-3 shadow-sm hover:shadow-md hover:border-maroon transition-all cursor-default text-gray-700 font-medium">
+            <span>Food Photography & Styling</span>
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-xl">
+              Menyediakan foto profesional untuk menu, katalog, dan konten promosi agar lebih menarik pelanggan.
+              <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+
+          <!-- Pill 3 -->
+          <div class="relative group bg-white border border-gray-200 rounded-full px-6 py-3 shadow-sm hover:shadow-md hover:border-maroon transition-all cursor-default text-gray-700 font-medium">
+            <span>Market Research & Feasibility Study</span>
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-xl">
+              Analisis pasar, tren kuliner, dan studi kelayakan untuk membantu klien menentukan konsep bisnis yang tepat.
+              <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+
+          <!-- Pill 4 (Highlight) -->
+          <div class="relative group bg-white border border-gray-200 rounded-full px-6 py-3 shadow-sm hover:shadow-md hover:border-maroon transition-all cursor-default text-gray-700 font-medium">
+            <span>Supply Chain & Vendor Management</span>
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-xl">
+              Membantu memilih supplier bahan baku, negosiasi harga, dan memastikan kualitas serta konsistensi pasokan.
+              <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+
+          <!-- Pill 5 -->
+          <div class="relative group bg-white border border-gray-200 rounded-full px-6 py-3 shadow-sm hover:shadow-md hover:border-maroon transition-all cursor-default text-gray-700 font-medium">
+            <span>Food Safety & Hygiene Training</span>
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-xl">
+              Pelatihan standar kebersihan dan keamanan pangan sesuai regulasi agar operasional lebih profesional.
+              <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+
+          <!-- Pill 6 -->
+          <div class="relative group bg-white border border-gray-200 rounded-full px-6 py-3 shadow-sm hover:shadow-md hover:border-maroon transition-all cursor-default text-gray-700 font-medium">
+            <span>Event & Catering Consultation</span>
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-xl">
+              Membantu restoran/kafe memperluas layanan ke arah event atau catering dengan konsep yang terstruktur.
+              <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
 
