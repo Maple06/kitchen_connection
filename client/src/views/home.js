@@ -31,21 +31,44 @@ export const renderHome = (container) => {
             <h2 class="text-3xl md:text-4xl font-bold text-maroon mb-4">Tentang Kitchen Connection</h2>
             <div class="w-20 h-1 bg-maroon mb-6"></div>
             <p class="text-lg text-gray-700 leading-relaxed mb-6">
-              Kitchen Connection didirikan oleh <strong>Chef Sara Rabasari</strong> pada tahun 2018 di Bandung dengan visi menjadi mitra utama dalam membangun kesuksesan bisnis di industri <em>food & beverage</em>. Berbekal pengalaman panjang sebagai praktisi dan akademisi di berbagai bidang, mulai dari hotel, restoran, kapal pesiar, hingga menjadi dosen di industri ini, Chef Sara yang juga aktif sebagai Sekjen di Indonesian Chef Association Jawa Barat mendirikan Kitchen Connection untuk memenuhi kebutuhan pasar akan layanan konsultasi menyeluruh di sektor <em>food & beverage</em>.
+              Kitchen Connection didirikan oleh <strong>Chef Sara Rabasari, SM.PAR MM.PAR</strong> pada tahun 2018 sebagai solusi <em>"one stop consultant service"</em> di industri F&B. Berbekal visi menjadi mitra utama kesuksesan bisnis kuliner, beliau menghadirkan layanan konsultasi menyeluruh dari konseptualisasi hingga operasional.
             </p>
-            <p class="text-lg text-gray-700 leading-relaxed">
-              Kitchen Connection hadir sebagai solusi <strong>"one stop consultant service,"</strong> menawarkan berbagai layanan yang dirancang untuk memaksimalkan potensi bisnis Anda. Layanan kami mencakup <em>menu engineering</em>, pelatihan karyawan, hingga desain interior kafe dan restoran yang disesuaikan dengan konsep dan menu yang unik. Dalam setiap proyek, kami berkomitmen memberikan konsultasi yang komprehensif, mulai dari perancangan layout, jasa desain interior, <em>menu engineering</em>, pembuatan <em>cost card</em> dan <em>mastering recipe</em>, hingga perekrutan dan pelatihan karyawan serta penyusunan SOP.
-            </p>
+            <ul class="space-y-4">
+              <li class="flex items-start">
+                <i class="fa-solid fa-circle-check text-maroon mt-1.5 mr-3 text-lg"></i>
+                <p class="text-gray-700"><strong>Akademisi & Praktisi Ahli:</strong> Menjabat sebagai <em>Head of Diploma Program</em> di Akpar NHI Bandung dengan latar belakang S2 Tourism Management.</p>
+              </li>
+              <li class="flex items-start">
+                <i class="fa-solid fa-circle-check text-maroon mt-1.5 mr-3 text-lg"></i>
+                <p class="text-gray-700"><strong>Pengalaman Global:</strong> Rekam jejak ekstensif di perhotelan internasional (Hilton, Mercure) dan kapal pesiar (Carnival Cruise Lines - USA).</p>
+              </li>
+              <li class="flex items-start">
+                <i class="fa-solid fa-circle-check text-maroon mt-1.5 mr-3 text-lg"></i>
+                <p class="text-gray-700"><strong>Asesor & Auditor Tersertifikasi:</strong> Asesor kompetensi BNSP aktif dan auditor bersertifikat HACCP dari TÜV Rheinland.</p>
+              </li>
+              <li class="flex items-start">
+                <i class="fa-solid fa-circle-check text-maroon mt-1.5 mr-3 text-lg"></i>
+                <p class="text-gray-700"><strong>Dedikasi Industri:</strong> Berperan strategis sebagai Sekretaris Jenderal Indonesian Chef Association (ICA) BPD Jawa Barat.</p>
+              </li>
+              <li class="flex items-start">
+                <i class="fa-solid fa-circle-check text-maroon mt-1.5 mr-3 text-lg"></i>
+                <p class="text-gray-700"><strong>Konsultan Berpengalaman:</strong> Telah menangani puluhan proyek mulai dari <em>menu engineering</em>, pembuatan SOP, desain <em>layout</em>, hingga pelatihan SDM.</p>
+              </li>
+            </ul>
           </div>
-          <div class="relative reveal-on-scroll" style="animation-delay: 0.3s; animation-fill-mode: both;">
-            <div class="aspect-w-4 aspect-h-5 rounded-2xl overflow-hidden shadow-2xl h-80 lg:h-96 w-full relative">
-              <div class="absolute inset-0 bg-gradient-to-tr from-maroon-dark to-maroon flex items-center justify-center">
-                <i class="fa-solid fa-utensils text-white opacity-20 text-9xl"></i>
+          <div class="relative reveal-on-scroll flex justify-center items-center" style="animation-delay: 0.3s; animation-fill-mode: both;">
+            <div class="relative w-full max-w-sm">
+              <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl relative group bg-gray-100 w-full">
+                <img src="/sara.jpg" alt="Chef Sara Rabasari" class="object-cover object-center w-full h-full absolute inset-0 z-10 transition-transform duration-500 group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('placeholder-icon').style.display='flex';">
+                <div id="placeholder-icon" class="absolute inset-0 bg-gradient-to-tr from-maroon-dark to-maroon flex flex-col items-center justify-center z-0" style="display: none;">
+                  <i class="fa-solid fa-user-tie text-white opacity-20 text-7xl mb-4"></i>
+                  <span class="text-white opacity-50 text-sm">Foto Profil Belum Tersedia</span>
+                </div>
               </div>
-            </div>
-            <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
-              <p class="text-maroon font-bold text-xl mb-1">Sejak 2018</p>
-              <p class="text-gray-500 text-sm font-medium">Berpengalaman di Industri F&B</p>
+              <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl border border-gray-100 hover:-translate-y-1 transition-transform duration-300 z-20">
+                <p class="text-maroon font-bold text-xl mb-1">Sejak 2018</p>
+                <p class="text-gray-500 text-sm font-medium">Berpengalaman di Industri F&B</p>
+              </div>
             </div>
           </div>
         </div>
@@ -127,8 +150,8 @@ export const renderHome = (container) => {
         </div>
 
         <!-- Layanan Lainnya Section -->
-        <div class="text-center mt-20 mb-8 reveal-on-scroll" style="animation-delay: 0.4s; animation-fill-mode: both;">
-          <h3 class="text-xl font-bold text-gray-500 tracking-wider uppercase">Layanan Lainnya</h3>
+        <div class="text-center mt-10 mb-8 reveal-on-scroll" style="animation-delay: 0.4s; animation-fill-mode: both;">
+          <h3 class="text-sm font-bold text-gray-500 tracking-widest uppercase">Layanan Lainnya</h3>
         </div>
         
         <div class="flex flex-wrap justify-center gap-4 md:gap-5 reveal-on-scroll max-w-4xl mx-auto" style="animation-delay: 0.5s; animation-fill-mode: both;">
