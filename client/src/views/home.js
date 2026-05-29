@@ -135,7 +135,7 @@ export const renderHome = (container) => {
             </div>
             <h3 class="text-xl font-bold mb-3">Keamanan & Kepatuhan</h3>
             <p class="text-gray-600 mb-4">Memastikan dapur Anda memenuhi standar kesehatan lokal dan keselamatan internasional.</p>
-            <a href="#checklist" class="text-maroon font-semibold hover:underline">Coba Checklist Kami <i class="fa-solid fa-arrow-right text-sm ml-1"></i></a>
+            <a href="#checklist" class="text-maroon font-semibold hover:underline">Mulai Konsultasi Awal <i class="fa-solid fa-arrow-right text-sm ml-1"></i></a>
           </div>
           
           <!-- Service 3 -->

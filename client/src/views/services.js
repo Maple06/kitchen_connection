@@ -50,7 +50,7 @@ export const renderServices = (container) => {
               <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i> <span>Desain ventilasi dan sirkulasi udara (Hood & Exhaust system).</span></li>
               <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-3"></i> <span>Pelatihan standar food safety dan penggunaan alat pemadam.</span></li>
             </ul>
-            <a href="#asesmen" class="inline-block border-2 border-maroon text-maroon hover:bg-maroon hover:text-white px-6 py-3 rounded-lg font-bold transition-colors">Mulai Asesmen Mini</a>
+            <a href="#checklist" class="inline-block border-2 border-maroon text-maroon hover:bg-maroon hover:text-white px-6 py-3 rounded-lg font-bold transition-colors">Mulai Konsultasi Awal</a>
           </div>
         </div>
 
