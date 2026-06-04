@@ -6,9 +6,10 @@ export const renderHome = (container) => {
       <div class="absolute inset-0" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px; opacity: 0.1;"></div>
       
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 flex flex-col items-center text-center animate-fade-in-up">
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 animate-pulse-slow">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4 animate-pulse-slow">
           One Stop F&B Consultant
         </h1>
+        <p class="text-lg md:text-xl max-w-2xl mb-2 text-gray-300 font-medium">Konsultan F&amp;B Profesional di Bandung</p>
         <p class="text-xl md:text-2xl max-w-3xl mb-10 text-gray-200 font-medium">
           From Concept to Culinary Excellence
         </p>
@@ -28,7 +29,7 @@ export const renderHome = (container) => {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div class="reveal-on-scroll">
-            <h2 class="text-3xl md:text-4xl font-bold text-maroon mb-4">Tentang Kitchen Connection</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-maroon mb-4">Tentang Kitchen Connection — Konsultan F&amp;B di Bandung</h2>
             <div class="w-20 h-1 bg-maroon mb-6"></div>
             <p class="text-lg text-gray-700 leading-relaxed mb-6">
               Kitchen Connection didirikan oleh <strong>Chef Sara Rabasari, SM.PAR MM.PAR</strong> pada tahun 2018 sebagai solusi <em>"one stop consultant service"</em> di industri F&B. Berbekal visi menjadi mitra utama kesuksesan bisnis kuliner, beliau menghadirkan layanan konsultasi menyeluruh dari konseptualisasi hingga operasional.
@@ -112,9 +113,9 @@ export const renderHome = (container) => {
     <div id="services-overview" class="py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 reveal-on-scroll">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Solusi Komprehensif</h2>
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Solusi Komprehensif untuk Bisnis Kuliner Anda</h2>
           <div class="w-24 h-1 bg-maroon mx-auto mb-6"></div>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">Kami menyediakan konsultasi menyeluruh mulai dari konseptualisasi hingga pengadaan peralatan.</p>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">Kami menyediakan konsultasi menyeluruh mulai dari konseptualisasi, desain dapur komersial, hingga pengadaan peralatan untuk restoran dan kafe di Bandung dan seluruh Indonesia.</p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
