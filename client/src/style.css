@@ -70,11 +70,7 @@ body {
 
 /* ── Project Carousel ────────────────────────────────────────────────── */
 
-/* The card itself: fixed height so portrait images don't blow up the layout */
-.client-panel > div > div {
-  height: 260px;
-}
-
+/* Only apply fixed height to the flex container on desktop. On mobile let it expand naturally. */
 @media (min-width: 1024px) {
   .client-panel > div > div {
     height: 440px;

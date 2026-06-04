@@ -96,7 +96,7 @@ const updateNav = (user) => {
     }
   }
 
-  const renderAuthLinks = (targetEl) => {
+  const renderAuthLinks = (targetEl, isMobile = false) => {
     if (!targetEl) return;
 
     const menuButtonId = `profile-menu-button-${targetEl.id || 'auth'}`;
@@ -107,41 +107,74 @@ const updateNav = (user) => {
         return names.map(n => n[0]).join('').substring(0, 2).toUpperCase();
       };
 
-      targetEl.innerHTML = `
-        <div class="relative inline-block text-left group">
-          <button type="button" class="flex items-center justify-center w-10 h-10 rounded-full bg-maroon text-white font-bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-maroon transition-transform transform hover:scale-105" id="${menuButtonId}">
-            ${getInitials(user.name)}
-          </button>
-          
-          <!-- Dropdown menu -->
-          <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
-            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="${menuButtonId}">
-              <div class="px-4 py-2 border-b border-gray-100">
-                <p class="text-sm font-medium text-gray-900 truncate">${user.name}</p>
+      if (isMobile) {
+        targetEl.innerHTML = `
+          <div class="mt-2 pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-3 mb-4 px-2">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-maroon text-white font-bold text-lg shadow-sm">
+                ${getInitials(user.name)}
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-900">${user.name}</p>
                 <p class="text-xs text-gray-500 capitalize">${user.role}</p>
               </div>
-              <a href="#account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-maroon transition-colors" role="menuitem">
-                <i class="fa-solid fa-user-gear w-5"></i> Manajemen Akun
+            </div>
+            <div class="flex flex-col space-y-2 px-2">
+              <a href="#account" class="flex items-center gap-2 py-2 text-sm text-gray-700 hover:text-maroon transition-colors" data-link>
+                <i class="fa-solid fa-user-gear w-5 text-center"></i> Manajemen Akun
               </a>
-              <button onclick="window.logout()" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors" role="menuitem">
-                <i class="fa-solid fa-right-from-bracket w-5"></i> Keluar
+              <button onclick="window.logout()" class="flex items-center gap-2 text-left py-2 text-sm text-red-600 hover:text-red-800 transition-colors">
+                <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Keluar
               </button>
             </div>
           </div>
-        </div>
-      `;
+        `;
+      } else {
+        targetEl.innerHTML = `
+          <div class="relative inline-block text-left group">
+            <button type="button" class="flex items-center justify-center w-10 h-10 rounded-full bg-maroon text-white font-bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-maroon transition-transform transform hover:scale-105" id="${menuButtonId}">
+              ${getInitials(user.name)}
+            </button>
+            
+            <!-- Dropdown menu -->
+            <div class="origin-top-left lg:origin-top-right absolute left-0 lg:left-auto lg:right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
+              <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="${menuButtonId}">
+                <div class="px-4 py-2 border-b border-gray-100">
+                  <p class="text-sm font-medium text-gray-900 truncate">${user.name}</p>
+                  <p class="text-xs text-gray-500 capitalize">${user.role}</p>
+                </div>
+                <a href="#account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-maroon transition-colors" role="menuitem">
+                  <i class="fa-solid fa-user-gear w-5"></i> Manajemen Akun
+                </a>
+                <button onclick="window.logout()" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors" role="menuitem">
+                  <i class="fa-solid fa-right-from-bracket w-5"></i> Keluar
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
     } else {
-      targetEl.innerHTML = `
-        <a href="#login?tab=login" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Masuk</a>
-        <a href="#login?tab=register" class="bg-maroon hover:bg-maroon-dark text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm" data-link>
-          Mulai Disini <i class="fa-solid fa-arrow-right ml-1"></i>
-        </a>
-      `;
+      if (isMobile) {
+        targetEl.innerHTML = `
+          <a href="#login?tab=login" class="text-gray-600 hover:text-maroon font-medium transition-colors px-2" data-link>Masuk</a>
+          <a href="#login?tab=register" class="bg-maroon hover:bg-maroon-dark text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm inline-flex items-center justify-center mt-2" data-link>
+            Mulai Disini <i class="fa-solid fa-arrow-right ml-2"></i>
+          </a>
+        `;
+      } else {
+        targetEl.innerHTML = `
+          <a href="#login?tab=login" class="text-gray-600 hover:text-maroon font-medium transition-colors" data-link>Masuk</a>
+          <a href="#login?tab=register" class="bg-maroon hover:bg-maroon-dark text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm" data-link>
+            Mulai Disini <i class="fa-solid fa-arrow-right ml-1"></i>
+          </a>
+        `;
+      }
     }
   };
 
-  renderAuthLinks(authLinks);
-  renderAuthLinks(authLinksMobile);
+  renderAuthLinks(authLinks, false);
+  renderAuthLinks(authLinksMobile, true);
 };
 
 // Simple Hash Router
@@ -251,14 +284,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Close mobile menu when navigating
   window.addEventListener('hashchange', () => setMobileMenuOpen(false));
-  if (mobileMenu) {
-    mobileMenu.addEventListener('click', (e) => {
-      const target = e.target;
-      if (target && target.closest && target.closest('a')) {
+  
+  // Close mobile menu on click outside or on a link
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    const isOpen = mobileMenu && !mobileMenu.classList.contains('hidden');
+    
+    if (isOpen) {
+      const clickedInsideMenu = mobileMenu.contains(target);
+      const clickedMenuButton = mobileMenuButton && mobileMenuButton.contains(target);
+      const clickedLink = target && target.closest && target.closest('a');
+      
+      if ((!clickedInsideMenu && !clickedMenuButton) || clickedLink) {
         setMobileMenuOpen(false);
       }
-    });
-  }
+    }
+  });
   
   const links = document.querySelectorAll('[data-link]');
   links.forEach(link => {

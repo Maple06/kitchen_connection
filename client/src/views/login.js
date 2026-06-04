@@ -19,8 +19,8 @@ export const renderLogin = (container, query) => {
         
         <!-- Logo and Header -->
         <div class="text-center mb-6">
-          <div class="mx-auto flex items-center justify-center w-16 h-16 bg-maroon text-white rounded-full mb-4 shadow-md">
-            <i class="fa-solid fa-fire-burner text-3xl"></i>
+          <div class="mx-auto flex items-center justify-center mb-4">
+            <img src="/kitchen_connection.png" alt="Kitchen Connection Logo" class="h-20 w-auto drop-shadow-md">
           </div>
           <h2 class="text-3xl font-extrabold text-gray-900" id="form-title">
             Selamat Datang
@@ -37,6 +37,16 @@ export const renderLogin = (container, query) => {
         </div>
 
         <div id="auth-alert" class="hidden p-3 mb-4 rounded-lg text-sm text-center"></div>
+
+        <!-- Google Sign-In button (rendered by GSI) -->
+        <div id="google-signin-btn" class="flex justify-center mb-4"></div>
+
+        <!-- Divider -->
+        <div class="flex items-center gap-3 mb-6" id="auth-divider">
+          <div class="flex-1 h-px bg-gray-200"></div>
+          <span class="text-xs text-gray-400 font-medium uppercase tracking-wider">atau dengan email</span>
+          <div class="flex-1 h-px bg-gray-200"></div>
+        </div>
 
         <div class="grid grid-cols-1">
           <!-- Login Form -->
@@ -59,17 +69,9 @@ export const renderLogin = (container, query) => {
                 </div>
               </div>
             </div>
-            <button type="submit" id="login-btn" class="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md">
+            <button type="submit" id="login-btn" class="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md mt-6">
               Masuk ke Portal
             </button>
-            <!-- Divider -->
-            <div class="flex items-center gap-3 my-1">
-              <div class="flex-1 h-px bg-gray-200"></div>
-              <span class="text-xs text-gray-400 font-medium">atau</span>
-              <div class="flex-1 h-px bg-gray-200"></div>
-            </div>
-            <!-- Google Sign-In button (rendered by GSI) -->
-            <div id="google-signin-btn" class="flex justify-center"></div>
           </form>
 
           <!-- Register Form -->
@@ -102,7 +104,7 @@ export const renderLogin = (container, query) => {
                 </div>
               </div>
             </div>
-            <button type="submit" id="register-btn" class="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md">
+            <button type="submit" id="register-btn" class="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md mt-6">
               Buat Akun Baru
             </button>
           </form>

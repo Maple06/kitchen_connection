@@ -812,12 +812,23 @@ app.post('/reservations', async (req, res) => {
                    <p>Salam hangat,<br>Tim Kitchen Connection</p>`
         });
 
-        // Notify admin
-        const [adminResult] = await db.query('SELECT email FROM users WHERE role = "admin" OR role = "superadmin" LIMIT 1');
-        if (adminResult.length > 0) {
+        // Notify admin and superadmin
+        const [superadmins] = await db.query('SELECT email FROM users WHERE role = "superadmin"');
+        const [admins] = await db.query('SELECT email FROM users WHERE role = "admin"');
+        
+        let toEmails = superadmins.map(u => u.email).join(',');
+        let ccEmails = admins.map(u => u.email).join(',');
+        
+        if (!toEmails) {
+            toEmails = ccEmails;
+            ccEmails = '';
+        }
+
+        if (toEmails) {
             await transporter.sendMail({
                 from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
-                to: adminResult[0].email,
+                to: toEmails,
+                cc: ccEmails,
                 subject: 'Reservasi Baru Masuk',
                 html: `<p>Reservasi baru dari <strong>${client_name}</strong> (${client_email}).</p>
                        <p>Tanggal: ${date}<br>Jam: ${time_slot}</p>
