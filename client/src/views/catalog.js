@@ -11,22 +11,22 @@ export const renderCatalog = async (container) => {
       <!-- Search and Filter -->
       <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4">
         <div class="flex-grow">
-          <input type="text" placeholder="Cari peralatan..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon">
+          <input type="text" id="search-input" placeholder="Cari peralatan..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon">
         </div>
         <div class="flex gap-4">
-          <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon bg-white">
+          <select id="category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon bg-white">
             <option value="">Semua Kategori</option>
             <option value="Cooking">Memasak</option>
             <option value="Baking">Memanggang</option>
             <option value="Cooling">Pendingin</option>
             <option value="Ventilation">Ventilasi</option>
           </select>
-          <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon bg-white">
+          <select id="type-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon bg-white">
             <option value="">Semua Tipe</option>
             <option value="commercial">Komersial</option>
             <option value="home">Rumah Tangga</option>
           </select>
-          <button class="bg-maroon text-white px-6 py-2 rounded-lg hover:bg-maroon-dark transition-colors">
+          <button id="filter-btn" class="bg-maroon text-white px-6 py-2 rounded-lg hover:bg-maroon-dark transition-colors">
             Saring
           </button>
         </div>
@@ -53,12 +53,18 @@ export const renderCatalog = async (container) => {
 
   try {
     const res = await fetch(`${API_URL}/equipments`);
-    const equipments = await res.json();
+    const allEquipments = await res.json();
     
     const grid = document.getElementById('catalog-grid');
-    if(grid) {
+    const searchInput = document.getElementById('search-input');
+    const categoryFilter = document.getElementById('category-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const filterBtn = document.getElementById('filter-btn');
+
+    const renderGrid = (equipments) => {
+      if(!grid) return;
       if (equipments.length === 0) {
-        grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-10">Belum ada data peralatan.</p>';
+        grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-10">Belum ada data peralatan yang sesuai filter.</p>';
         return;
       }
 
@@ -80,7 +86,30 @@ export const renderCatalog = async (container) => {
           </button>
         </div>
       `).join('');
-    }
+    };
+
+    const applyFilters = () => {
+      const searchTerm = searchInput.value.toLowerCase();
+      const cat = categoryFilter.value;
+      const type = typeFilter.value;
+
+      const filtered = allEquipments.filter(eq => {
+        const matchSearch = eq.name.toLowerCase().includes(searchTerm) || (eq.description && eq.description.toLowerCase().includes(searchTerm));
+        const matchCat = cat ? eq.category === cat : true;
+        const matchType = type ? eq.type === type : true;
+        return matchSearch && matchCat && matchType;
+      });
+
+      renderGrid(filtered);
+    };
+
+    if (filterBtn) filterBtn.addEventListener('click', applyFilters);
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (categoryFilter) categoryFilter.addEventListener('change', applyFilters);
+    if (typeFilter) typeFilter.addEventListener('change', applyFilters);
+
+    renderGrid(allEquipments);
+
   } catch (error) {
     const grid = document.getElementById('catalog-grid');
     if (grid) grid.innerHTML = '<p class="col-span-full text-center text-red-500 py-10">Gagal mengambil data dari server.</p>';
