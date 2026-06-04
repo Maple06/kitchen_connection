@@ -499,6 +499,19 @@ app.post('/projects', verifyToken, async (req, res) => {
                 'INSERT INTO projects (client_id, title, status, progress_percentage) VALUES (?, ?, ?, ?)',
                 [req.user.id, title, 'Konsultasi', 10]
             );
+            
+            // Notify Admin
+            const [adminResult] = await db.query('SELECT email FROM users WHERE role = "admin" OR role = "superadmin" LIMIT 1');
+            if (adminResult.length > 0) {
+                await transporter.sendMail({
+                    from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+                    to: adminResult[0].email,
+                    subject: `Permintaan Proyek Baru - ${title}`,
+                    html: `<p>Ada permintaan proyek baru dari klien: <strong>${req.user.name}</strong></p>
+                           <p>Judul: ${title}</p>
+                           <p>Silakan periksa dashboard admin untuk detailnya.</p>`
+                });
+            }
             return res.json({ message: 'Permintaan proyek berhasil dibuat. Silakan buat reservasi.' });
         }
 
@@ -512,6 +525,24 @@ app.post('/projects', verifyToken, async (req, res) => {
             'INSERT INTO projects (client_id, title, status, progress_percentage, pic_id) VALUES (?, ?, ?, ?, ?)',
             [client_id, title, finalStatus, progress, pic_id || null]
         );
+
+        // Send email to client
+        const [clientResult] = await db.query('SELECT email, name FROM users WHERE id = ?', [client_id]);
+        if (clientResult.length > 0) {
+            const client = clientResult[0];
+            await transporter.sendMail({
+                from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+                to: client.email,
+                subject: `Proyek Baru: ${title}`,
+                html: `<p>Halo ${client.name},</p>
+                       <p>Proyek baru "<strong>${title}</strong>" telah ditambahkan ke akun Anda.</p>
+                       <p>Status saat ini: <strong style="color: maroon;">${finalStatus}</strong> (${progress}%).</p>
+                       <p>Silakan masuk ke portal klien untuk melihat detail selengkapnya.</p>
+                       <br>
+                       <p>Salam hangat,<br>Tim Kitchen Connection</p>`
+            });
+        }
+
         res.json({ message: 'Proyek berhasil ditambahkan.' });
     } catch (error) {
         res.status(500).json({ message: 'Gagal membuat proyek. Detail: ' + (error.message || error) });
@@ -523,11 +554,35 @@ app.put('/projects/:id', verifyToken, async (req, res) => {
 
     const { title, status, pic_id } = req.body;
     try {
+        // Get old project data
+        const [oldProjectResult] = await db.query('SELECT status, client_id, title FROM projects WHERE id = ?', [req.params.id]);
+        if (oldProjectResult.length === 0) return res.status(404).json({ message: 'Proyek tidak ditemukan.' });
+        const oldProject = oldProjectResult[0];
+
         const progress = STATUS_PERCENTAGES[status] || 10;
         await db.query(
             'UPDATE projects SET title = ?, status = ?, progress_percentage = ?, pic_id = ? WHERE id = ?',
             [title, status, progress, pic_id || null, req.params.id]
         );
+
+        // Send email if status changed
+        if (oldProject.status !== status) {
+            const [clientResult] = await db.query('SELECT email, name FROM users WHERE id = ?', [oldProject.client_id]);
+            if (clientResult.length > 0) {
+                const client = clientResult[0];
+                await transporter.sendMail({
+                    from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+                    to: client.email,
+                    subject: `Pembaruan Status Proyek - ${title || oldProject.title}`,
+                    html: `<p>Halo ${client.name},</p>
+                           <p>Status proyek Anda "<strong>${title || oldProject.title}</strong>" telah diperbarui menjadi: <strong style="color: maroon;">${status}</strong> (${progress}%).</p>
+                           <p>Silakan masuk ke portal klien untuk melihat detail selengkapnya.</p>
+                           <br>
+                           <p>Salam hangat,<br>Tim Kitchen Connection</p>`
+                });
+            }
+        }
+
         res.json({ message: 'Proyek berhasil diperbarui.' });
     } catch (error) {
         res.status(500).json({ message: 'Gagal memperbarui proyek. Detail: ' + (error.message || error) });
@@ -744,6 +799,33 @@ app.post('/reservations', async (req, res) => {
             'INSERT INTO reservations (client_name, client_email, date, time_slot, notes) VALUES (?, ?, ?, ?, ?)',
             [client_name, client_email, date, time_slot, notes]
         );
+
+        // Notify client
+        await transporter.sendMail({
+            from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+            to: client_email,
+            subject: 'Konfirmasi Reservasi Konsultasi',
+            html: `<p>Halo ${client_name},</p>
+                   <p>Terima kasih. Permintaan reservasi Anda pada <strong>${date}</strong> jam <strong>${time_slot}</strong> telah kami terima dan saat ini berstatus <strong>Pending</strong>.</p>
+                   <p>Tim kami akan segera menghubungi Anda untuk konfirmasi lebih lanjut.</p>
+                   <br>
+                   <p>Salam hangat,<br>Tim Kitchen Connection</p>`
+        });
+
+        // Notify admin
+        const [adminResult] = await db.query('SELECT email FROM users WHERE role = "admin" OR role = "superadmin" LIMIT 1');
+        if (adminResult.length > 0) {
+            await transporter.sendMail({
+                from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+                to: adminResult[0].email,
+                subject: 'Reservasi Baru Masuk',
+                html: `<p>Reservasi baru dari <strong>${client_name}</strong> (${client_email}).</p>
+                       <p>Tanggal: ${date}<br>Jam: ${time_slot}</p>
+                       <p>Catatan: ${notes}</p>
+                       <p>Silakan cek dashboard admin untuk menindaklanjuti.</p>`
+            });
+        }
+
         res.json({ message: 'Reservasi berhasil dibuat!' });
     } catch (error) {
         res.status(500).json({ message: 'Gagal membuat reservasi Detail: ' + (error.message || error) });
