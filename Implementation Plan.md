@@ -3,6 +3,4 @@
 3. Add OG meta tags
 4. Improve SEO on landing page to increase ranking on search "Consultant Bandung" or others.
 5. Implement AJAX on katalog search and filter
-7. Google Authentication
-8. Rombak landing page
-9. 
+6. Google Authentication

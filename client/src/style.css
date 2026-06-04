@@ -67,3 +67,58 @@ body {
 .reveal-on-scroll {
   opacity: 0; /* Starts hidden, revealed by JS intersection observer */
 }
+
+/* ── Project Carousel ────────────────────────────────────────────────── */
+
+/* The card itself: fixed height so portrait images don't blow up the layout */
+.client-panel > div > div {
+  height: 260px;
+}
+
+@media (min-width: 1024px) {
+  .client-panel > div > div {
+    height: 440px;
+  }
+}
+
+/* Info column: match card height */
+.client-panel .client-info-col {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Carousel wrapper: fill its column, fixed height */
+.project-carousel {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.carousel-slide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Active client tab */
+.client-tab-btn.active {
+  background-color: var(--color-maroon);
+  color: white;
+  border-color: var(--color-maroon);
+}

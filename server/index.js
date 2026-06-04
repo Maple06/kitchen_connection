@@ -218,7 +218,7 @@ app.post('/auth/login', async (req, res) => {
         if (!user.is_verified) return res.status(403).json({ message: 'Akun Anda belum diverifikasi. Silakan cek email Anda.' });
 
         const token = jwt.sign({ id: user.id, role: user.role, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
-        
+
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -235,6 +235,58 @@ app.post('/auth/login', async (req, res) => {
 app.post('/auth/logout', (req, res) => {
     res.clearCookie('token');
     res.json({ message: 'Berhasil logout' });
+});
+
+app.post('/auth/google', async (req, res) => {
+    const { credential } = req.body;
+    if (!credential) return res.status(400).json({ message: 'Token Google tidak ditemukan.' });
+
+    try {
+        const response = await axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
+        const payload = response.data;
+
+        const GOOGLE_CLIENT_ID = '244439459583-o237jdkh8jucm9j22u11b64upnkajvgr.apps.googleusercontent.com';
+        if (payload.aud !== GOOGLE_CLIENT_ID) {
+            return res.status(401).json({ message: 'Token Google tidak valid.' });
+        }
+
+        const { sub: googleId, email, name, picture } = payload;
+        if (!email) return res.status(400).json({ message: 'Email tidak ditemukan dari akun Google.' });
+
+        // Upsert user: find by google_id or email, create if not found
+        let [users] = await db.query('SELECT * FROM users WHERE google_id = ? OR email = ?', [googleId, email]);
+        let user;
+
+        if (users.length > 0) {
+            user = users[0];
+            // Link google_id if not yet set (existing email/password account)
+            if (!user.google_id) {
+                await db.query('UPDATE users SET google_id = ?, is_verified = 1 WHERE id = ?', [googleId, user.id]);
+            }
+        } else {
+            // New user via Google — auto-verified, no password
+            await db.query(
+                'INSERT INTO users (name, email, google_id, role, is_verified) VALUES (?, ?, ?, ?, ?)',
+                [name || email.split('@')[0], email, googleId, 'client', true]
+            );
+            const [newUser] = await db.query('SELECT * FROM users WHERE google_id = ?', [googleId]);
+            user = newUser[0];
+        }
+
+        const token = jwt.sign({ id: user.id, role: user.role, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 3600000
+        });
+
+        res.json({ message: 'Berhasil masuk dengan Google', user: { id: user.id, name: user.name, role: user.role } });
+    } catch (error) {
+        console.error('Google auth error:', error?.response?.data || error.message);
+        res.status(401).json({ message: 'Verifikasi Google gagal. Silakan coba lagi.' });
+    }
 });
 
 app.get('/auth/me', verifyToken, (req, res) => {
@@ -373,7 +425,7 @@ app.post('/account/request-delete', verifyToken, async (req, res) => {
 
 app.get('/account/delete-requests', verifyToken, async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     try {
         let query = '';
         if (req.user.role === 'admin') {
@@ -383,7 +435,7 @@ app.get('/account/delete-requests', verifyToken, async (req, res) => {
             // Superadmin sees admin and client requests
             query = "SELECT id, name, email, role FROM users WHERE delete_requested = 1 AND role != 'superadmin'";
         }
-        
+
         const [requests] = await db.query(query);
         res.json(requests);
     } catch (error) {
@@ -393,16 +445,16 @@ app.get('/account/delete-requests', verifyToken, async (req, res) => {
 
 app.delete('/account/:id', verifyToken, async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     try {
         const [targetUser] = await db.query('SELECT role FROM users WHERE id = ?', [req.params.id]);
         if (targetUser.length === 0) return res.status(404).json({ message: 'Pengguna tidak ditemukan.' });
-        
+
         // Admin cannot delete another Admin
         if (req.user.role === 'admin' && targetUser[0].role !== 'client') {
             return res.status(403).json({ message: 'Admin hanya dapat menghapus Client.' });
         }
-        
+
         await db.query('DELETE FROM users WHERE id = ?', [req.params.id]);
         res.json({ message: 'Akun berhasil dihapus permanen.' });
     } catch (error) {
@@ -440,7 +492,7 @@ const STATUS_PERCENTAGES = {
 app.post('/projects', verifyToken, async (req, res) => {
     try {
         const { client_id, title, status, pic_id } = req.body;
-        
+
         // Clients can create project requests
         if (req.user.role === 'client') {
             await db.query(
@@ -449,13 +501,13 @@ app.post('/projects', verifyToken, async (req, res) => {
             );
             return res.json({ message: 'Permintaan proyek berhasil dibuat. Silakan buat reservasi.' });
         }
-        
+
         // Admins can create projects for clients
         if (!client_id || !title) return res.status(400).json({ message: 'Klien dan Judul wajib diisi.' });
-        
+
         const finalStatus = status || 'Konsultasi';
         const progress = STATUS_PERCENTAGES[finalStatus] || 10;
-        
+
         await db.query(
             'INSERT INTO projects (client_id, title, status, progress_percentage, pic_id) VALUES (?, ?, ?, ?, ?)',
             [client_id, title, finalStatus, progress, pic_id || null]
@@ -468,7 +520,7 @@ app.post('/projects', verifyToken, async (req, res) => {
 
 app.put('/projects/:id', verifyToken, async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     const { title, status, pic_id } = req.body;
     try {
         const progress = STATUS_PERCENTAGES[status] || 10;
@@ -484,7 +536,7 @@ app.put('/projects/:id', verifyToken, async (req, res) => {
 
 app.delete('/projects/:id', verifyToken, async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     try {
         await db.query('UPDATE projects SET archived_at = CURRENT_TIMESTAMP WHERE id = ?', [req.params.id]);
         res.json({ message: 'Proyek berhasil diarsipkan.' });
@@ -505,14 +557,14 @@ app.get('/projects/:id/documents', verifyToken, async (req, res) => {
 
 app.delete('/documents/:id', verifyToken, async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     try {
         // First, fetch the document to get the file path
         const [docs] = await db.query('SELECT * FROM documents WHERE id = ?', [req.params.id]);
         if (docs.length === 0) return res.status(404).json({ message: 'Dokumen tidak ditemukan.' });
-        
+
         const doc = docs[0];
-        
+
         // Delete from GCS if it's a real uploaded file (not a Google Drive link)
         if (doc.type !== 'gdrive' && doc.file_path) {
             try {
@@ -525,7 +577,7 @@ app.delete('/documents/:id', verifyToken, async (req, res) => {
                 console.warn('GCS deletion warning:', gcsErr.message);
             }
         }
-        
+
         await db.query('DELETE FROM documents WHERE id = ?', [req.params.id]);
         res.json({ message: 'Dokumen berhasil dihapus.' });
     } catch (error) {
@@ -548,7 +600,7 @@ app.post('/documents/validate-drive', verifyToken, async (req, res) => {
         // Try fetching it to see if it redirects to a login page or returns 401/403/404
         // Google Drive public links generally return 200 OK. Private links redirect to ServiceLogin.
         const response = await axios.get(link, { maxRedirects: 0, validateStatus: null });
-        
+
         // If it redirects to login or accounts.google.com, it's private.
         if (response.status >= 300 && response.status < 400 && response.headers.location && response.headers.location.includes('ServiceLogin')) {
             return res.status(403).json({ message: 'Tautan Google Drive Anda di-private. Ubah akses menjadi "Anyone with the link".' });
@@ -566,10 +618,10 @@ app.post('/documents/validate-drive', verifyToken, async (req, res) => {
 
 app.post('/documents', verifyToken, upload.single('document'), async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     try {
         const { project_id, project_title, document_title, drive_link } = req.body;
-        
+
         if (!project_id || !project_title || !document_title) {
             return res.status(400).json({ message: 'Data tidak lengkap.' });
         }
@@ -581,7 +633,7 @@ app.post('/documents', verifyToken, upload.single('document'), async (req, res) 
         if (drive_link) {
             fileUrl = drive_link;
             fileType = 'gdrive';
-        } 
+        }
         // IF UPLOADING FILE TO GCS
         else if (req.file) {
             let fileBuffer = req.file.buffer;
@@ -645,7 +697,7 @@ app.get('/equipments', async (req, res) => {
 
 app.post('/equipments', verifyToken, async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     const { name, category, type, dimensions, power, capacity, description, image_url } = req.body;
     try {
         await db.query(
@@ -660,7 +712,7 @@ app.post('/equipments', verifyToken, async (req, res) => {
 
 app.put('/equipments/:id', verifyToken, async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     const { name, category, type, dimensions, power, capacity, description, image_url } = req.body;
     try {
         await db.query(
@@ -675,7 +727,7 @@ app.put('/equipments/:id', verifyToken, async (req, res) => {
 
 app.delete('/equipments/:id', verifyToken, async (req, res) => {
     if (req.user.role === 'client') return res.status(403).json({ message: 'Akses ditolak.' });
-    
+
     try {
         await db.query('DELETE FROM equipments WHERE id = ?', [req.params.id]);
         res.json({ message: 'Peralatan berhasil dihapus.' });
@@ -709,7 +761,7 @@ app.get('/dashboard/client', verifyToken, async (req, res) => {
             LEFT JOIN users pic ON p.pic_id = pic.id
             WHERE p.client_id = ?
         `, [req.user.id]);
-        
+
         let documents = [];
         if (projects.length > 0) {
             const [docs] = await db.query('SELECT * FROM documents WHERE project_id = ?', [projects[0].id]);

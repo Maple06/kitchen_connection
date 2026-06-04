@@ -62,6 +62,14 @@ export const renderLogin = (container, query) => {
             <button type="submit" id="login-btn" class="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-maroon hover:bg-maroon-dark transition-colors shadow-md">
               Masuk ke Portal
             </button>
+            <!-- Divider -->
+            <div class="flex items-center gap-3 my-1">
+              <div class="flex-1 h-px bg-gray-200"></div>
+              <span class="text-xs text-gray-400 font-medium">atau</span>
+              <div class="flex-1 h-px bg-gray-200"></div>
+            </div>
+            <!-- Google Sign-In button (rendered by GSI) -->
+            <div id="google-signin-btn" class="flex justify-center"></div>
           </form>
 
           <!-- Register Form -->
@@ -346,5 +354,56 @@ export const renderLogin = (container, query) => {
         btn.disabled = false;
       }
     });
+  }
+
+  // --- GOOGLE SIGN-IN ---
+  const handleGoogleCredential = async (response) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: response.credential }),
+        credentials: 'include'
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        window.currentUser = data.user;
+        window.dispatchEvent(new Event('hashchange'));
+        window.location.hash = (data.user.role === 'admin' || data.user.role === 'superadmin') ? '#admin' : '#dashboard';
+      } else {
+        showAlert(data.message || 'Masuk dengan Google gagal.');
+      }
+    } catch (err) {
+      showAlert('Server tidak dapat dihubungi.');
+    }
+  };
+
+  const renderGoogleButton = () => {
+    const btnContainer = document.getElementById('google-signin-btn');
+    if (!btnContainer || !window.google?.accounts?.id) return;
+
+    window.google.accounts.id.initialize({
+      client_id: '244439459583-o237jdkh8jucm9j22u11b64upnkajvgr.apps.googleusercontent.com',
+      callback: handleGoogleCredential,
+    });
+
+    window.google.accounts.id.renderButton(btnContainer, {
+      theme: 'outline',
+      size: 'large',
+      width: 320,
+      text: 'signin_with',
+      locale: 'id_ID',
+    });
+  };
+
+  if (window.google?.accounts?.id) {
+    renderGoogleButton();
+  } else {
+    const script = document.querySelector('script[src*="accounts.google.com/gsi/client"]');
+    if (script) {
+      script.addEventListener('load', renderGoogleButton);
+    }
   }
 };

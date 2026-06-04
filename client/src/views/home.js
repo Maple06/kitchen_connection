@@ -216,46 +216,229 @@ export const renderHome = (container) => {
     </div>
 
     <!-- Our Clients Section -->
-    <div class="py-20 bg-gray-50 border-t border-gray-100">
+    <div id="our-clients" class="py-20 bg-gray-50 border-t border-gray-100">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 reveal-on-scroll">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Klien & Proyek Unggulan</h2>
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Klien &amp; Proyek Unggulan</h2>
           <div class="w-24 h-1 bg-maroon mx-auto mb-6"></div>
           <p class="text-lg text-gray-600 max-w-2xl mx-auto">Sebagian dari klien yang telah mempercayakan pengembangan bisnisnya kepada kami.</p>
         </div>
-        
-        <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden reveal-on-scroll">
-          <div class="flex flex-col md:flex-row">
-            <div class="md:w-2/5 bg-gray-100 flex items-center justify-center p-8">
-              <img src="/tigre.jpg" alt="Tigre Coffee and Eatery Logo" class="w-40 h-40 rounded-full shadow-md object-cover">
-            </div>
-            <div class="md:w-3/5 p-8 flex flex-col justify-center">
-              <h3 class="text-2xl font-bold text-gray-900 mb-2">Tigre Coffee and Eatery</h3>
-              <a href="https://www.instagram.com/tigrecoffeeandeatery/" target="_blank" rel="noopener noreferrer" class="text-maroon hover:underline mb-6 text-sm inline-flex items-center">
-                <i class="fa-brands fa-instagram mr-1 text-lg"></i> @tigrecoffeeandeatery
-              </a>
-              <h4 class="font-semibold text-gray-700 mb-3 text-sm uppercase tracking-wider">Layanan yang diberikan:</h4>
-              <ul class="space-y-2">
-                <li class="flex items-start">
-                  <i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i>
-                  <span class="text-gray-600">Pengembangan Merek dan Logo</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i>
-                  <span class="text-gray-600">Segmentasi Pasar</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i>
-                  <span class="text-gray-600">Analisis Kompetitor</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i>
-                  <span class="text-gray-600">Pengembangan Menu</span>
-                </li>
-              </ul>
+
+        <!-- Project Tabs -->
+        <div class="flex flex-wrap justify-center gap-3 mb-10 reveal-on-scroll" id="client-tabs">
+          <button data-tab="tigre" class="client-tab-btn active px-5 py-2 rounded-full text-sm font-semibold border-2 border-maroon bg-maroon text-white transition-all duration-200">Tigre Coffee</button>
+          <button data-tab="karyakarsa" class="client-tab-btn px-5 py-2 rounded-full text-sm font-semibold border-2 border-gray-200 text-gray-600 hover:border-maroon hover:text-maroon transition-all duration-200">Kopi Karya Karsa</button>
+          <button data-tab="madamesari" class="client-tab-btn px-5 py-2 rounded-full text-sm font-semibold border-2 border-gray-200 text-gray-600 hover:border-maroon hover:text-maroon transition-all duration-200">Madame Sari</button>
+          <button data-tab="serasee" class="client-tab-btn px-5 py-2 rounded-full text-sm font-semibold border-2 border-gray-200 text-gray-600 hover:border-maroon hover:text-maroon transition-all duration-200">Serasee Coffee</button>
+        </div>
+
+        <!-- Project Cards -->
+        <div id="client-panels">
+
+          <!-- Tigre -->
+          <div id="panel-tigre" class="client-panel reveal-on-scroll">
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+              <div class="flex flex-col lg:flex-row h-full">
+                <!-- Left: Logo + Info -->
+                <div class="lg:w-2/5 bg-gradient-to-br from-gray-50 to-gray-100 p-8 flex flex-col justify-between">
+                  <div>
+                    <div class="w-28 h-28 rounded-2xl overflow-hidden shadow-md bg-white flex items-center justify-center mb-6">
+                      <img src="/projects/Tigre Coffee and Eatery/tigre.jpg" alt="Tigre Coffee and Eatery Logo" class="w-full h-full object-contain p-1">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">Tigre Coffee and Eatery</h3>
+                    <a href="https://www.instagram.com/tigrecoffeeandeatery/" target="_blank" rel="noopener noreferrer" class="text-maroon hover:underline text-sm inline-flex items-center gap-1 mb-6">
+                      <i class="fa-brands fa-instagram text-base"></i> @tigrecoffeeandeatery
+                    </a>
+                    <h4 class="font-semibold text-gray-500 mb-3 text-xs uppercase tracking-widest">Layanan yang diberikan</h4>
+                    <ul class="space-y-2">
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Pengembangan Merek dan Logo</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Segmentasi Pasar</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Analisis Kompetitor</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Pengembangan Menu</li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- Right: Image Carousel -->
+                <div class="lg:w-3/5 relative overflow-hidden bg-black h-[260px] lg:h-full">
+                  <div class="project-carousel h-full" id="carousel-tigre" data-current="0">
+                    <div class="carousel-track flex h-full transition-transform duration-500 ease-in-out">
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Tigre Coffee and Eatery/images/image_01.jpg" alt="Tigre project 1" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Tigre Coffee and Eatery/images/image_02.jpg" alt="Tigre project 2" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Tigre Coffee and Eatery/images/image_03.jpg" alt="Tigre project 3" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Tigre Coffee and Eatery/images/image_04.jpg" alt="Tigre project 4" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Tigre Coffee and Eatery/images/image_05.jpg" alt="Tigre project 5" class="w-full h-full object-cover"></div>
+                    </div>
+                    <!-- Controls -->
+                    <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm">
+                      <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm">
+                      <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+                    <!-- Dots -->
+                    <div class="carousel-dots absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-100 transition-opacity cursor-pointer" data-index="0"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity cursor-pointer" data-index="1"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity cursor-pointer" data-index="2"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity cursor-pointer" data-index="3"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 transition-opacity cursor-pointer" data-index="4"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+
+          <!-- Kopi Karya Karsa -->
+          <div id="panel-karyakarsa" class="client-panel hidden">
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+              <div class="flex flex-col lg:flex-row h-full">
+                <div class="lg:w-2/5 bg-gradient-to-br from-gray-50 to-gray-100 p-8 flex flex-col justify-between">
+                  <div>
+                    <div class="w-28 h-28 rounded-2xl overflow-hidden shadow-md bg-white flex items-center justify-center mb-6">
+                      <img src="/projects/Kopi Karya Karsa/karya_karsa.jpg" alt="Kopi Karya Karsa Logo" class="w-full h-full object-contain p-2">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">Kopi Karya Karsa</h3>
+                    <a href="https://www.instagram.com/kopikaryakarsa/" target="_blank" rel="noopener noreferrer" class="text-maroon hover:underline text-sm inline-flex items-center gap-1 mb-6">
+                      <i class="fa-brands fa-instagram text-base"></i> @kopikaryakarsa
+                    </a>
+                    <h4 class="font-semibold text-gray-500 mb-3 text-xs uppercase tracking-widest">Layanan yang diberikan</h4>
+                    <ul class="space-y-2">
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Layouting Tata Letak Ruang</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Pembuatan Menu</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="lg:w-3/5 relative overflow-hidden bg-black h-[260px] lg:h-full">
+                  <div class="project-carousel h-full" id="carousel-karyakarsa" data-current="0">
+                    <div class="carousel-track flex h-full transition-transform duration-500 ease-in-out">
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Kopi Karya Karsa/images/image_01.jpg" alt="Karya Karsa 1" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Kopi Karya Karsa/images/image_02.jpg" alt="Karya Karsa 2" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Kopi Karya Karsa/images/image_03.jpg" alt="Karya Karsa 3" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Kopi Karya Karsa/images/image_04.jpg" alt="Karya Karsa 4" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Kopi Karya Karsa/images/image_05.jpg" alt="Karya Karsa 5" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Kopi Karya Karsa/images/image_06.jpg" alt="Karya Karsa 6" class="w-full h-full object-cover"></div>
+                    </div>
+                    <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm">
+                      <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm">
+                      <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+                    <div class="carousel-dots absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-100 cursor-pointer" data-index="0"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="1"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="2"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="3"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="4"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="5"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Madame Sari -->
+          <div id="panel-madamesari" class="client-panel hidden">
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+              <div class="flex flex-col lg:flex-row h-full">
+                <div class="lg:w-2/5 bg-gradient-to-br from-gray-50 to-gray-100 p-8 flex flex-col justify-between">
+                  <div>
+                    <div class="w-28 h-28 rounded-2xl overflow-hidden shadow-md bg-white flex items-center justify-center mb-6">
+                      <img src="/projects/MadameSari/madamesari.jpg" alt="Madame Sari Resto Logo" class="w-full h-full object-contain p-1">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">Madame Sari Resto</h3>
+                    <a href="https://www.instagram.com/madamesariresto/" target="_blank" rel="noopener noreferrer" class="text-maroon hover:underline text-sm inline-flex items-center gap-1 mb-6">
+                      <i class="fa-brands fa-instagram text-base"></i> @madamesariresto
+                    </a>
+                    <h4 class="font-semibold text-gray-500 mb-3 text-xs uppercase tracking-widest">Layanan yang diberikan</h4>
+                    <ul class="space-y-2">
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Pelatihan Staf</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Rekrutmen SDM</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Pembuatan Menu Makanan</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Penetapan Harga</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="lg:w-3/5 relative overflow-hidden bg-black h-[260px] lg:h-full">
+                  <div class="project-carousel h-full" id="carousel-madamesari" data-current="0">
+                    <div class="carousel-track flex h-full transition-transform duration-500 ease-in-out">
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/MadameSari/images/image_01.jpg" alt="Madame Sari 1" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/MadameSari/images/image_02.jpg" alt="Madame Sari 2" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/MadameSari/images/image_03.jpg" alt="Madame Sari 3" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/MadameSari/images/image_04.jpg" alt="Madame Sari 4" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/MadameSari/images/image_05.jpg" alt="Madame Sari 5" class="w-full h-full object-cover"></div>
+                    </div>
+                    <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm">
+                      <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm">
+                      <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+                    <div class="carousel-dots absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-100 cursor-pointer" data-index="0"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="1"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="2"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="3"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="4"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Serasee Coffee -->
+          <div id="panel-serasee" class="client-panel hidden">
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+              <div class="flex flex-col lg:flex-row h-full">
+                <div class="lg:w-2/5 bg-gradient-to-br from-gray-50 to-gray-100 p-8 flex flex-col justify-between">
+                  <div>
+                    <div class="w-28 h-28 rounded-2xl overflow-hidden shadow-md bg-white flex items-center justify-center mb-6">
+                      <img src="/projects/Serasee Coffee/serasee.jpg" alt="Serasee Coffee Logo" class="w-full h-full object-contain p-2">
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">Serasee Coffee</h3>
+                    <a href="https://www.instagram.com/serasee.coffee/" target="_blank" rel="noopener noreferrer" class="text-maroon hover:underline text-sm inline-flex items-center gap-1 mb-6">
+                      <i class="fa-brands fa-instagram text-base"></i> @serasee.coffee
+                    </a>
+                    <h4 class="font-semibold text-gray-500 mb-3 text-xs uppercase tracking-widest">Layanan yang diberikan</h4>
+                    <ul class="space-y-2">
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Layouting Dapur</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Pengadaan Peralatan Dapur</li>
+                      <li class="flex items-center gap-2 text-gray-700 text-sm"><i class="fa-solid fa-circle-check text-maroon text-xs"></i> Rekrutmen SDM</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="lg:w-3/5 relative overflow-hidden bg-black h-[260px] lg:h-full">
+                  <div class="project-carousel h-full" id="carousel-serasee" data-current="0">
+                    <div class="carousel-track flex h-full transition-transform duration-500 ease-in-out">
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Serasee Coffee/images/image_01.jpg" alt="Serasee 1" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Serasee Coffee/images/image_02.jpg" alt="Serasee 2" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Serasee Coffee/images/image_03.jpg" alt="Serasee 3" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Serasee Coffee/images/image_04.jpg" alt="Serasee 4" class="w-full h-full object-cover"></div>
+                      <div class="carousel-slide flex-shrink-0 w-full h-full"><img src="/projects/Serasee Coffee/images/image_05.jpg" alt="Serasee 5" class="w-full h-full object-cover"></div>
+                    </div>
+                    <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm">
+                      <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-all z-10 backdrop-blur-sm">
+                      <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+                    <div class="carousel-dots absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-100 cursor-pointer" data-index="0"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="1"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="2"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="3"></span>
+                      <span class="dot w-2 h-2 rounded-full bg-white opacity-40 cursor-pointer" data-index="4"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end #client-panels -->
       </div>
     </div>
 
@@ -271,4 +454,79 @@ export const renderHome = (container) => {
       </div>
     </div>
   `;
+
+  // ── Clients: Tab switching ────────────────────────────────────────────
+  const tabs = container.querySelectorAll('.client-tab-btn');
+  const panels = container.querySelectorAll('.client-panel');
+
+  const switchTab = (targetTab) => {
+    tabs.forEach(btn => {
+      const isActive = btn.dataset.tab === targetTab;
+      btn.classList.toggle('active', isActive);
+      btn.classList.toggle('bg-maroon', isActive);
+      btn.classList.toggle('text-white', isActive);
+      btn.classList.toggle('border-maroon', isActive);
+      btn.classList.toggle('border-gray-200', !isActive);
+      btn.classList.toggle('text-gray-600', !isActive);
+    });
+    panels.forEach(panel => {
+      panel.classList.toggle('hidden', panel.id !== `panel-${targetTab}`);
+    });
+  };
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  // ── Clients: Per-carousel init ────────────────────────────────────────
+  const initCarousel = (carouselEl) => {
+    const track = carouselEl.querySelector('.carousel-track');
+    const slides = carouselEl.querySelectorAll('.carousel-slide');
+    const dots = carouselEl.querySelectorAll('.dot');
+    const prevBtn = carouselEl.querySelector('.carousel-prev');
+    const nextBtn = carouselEl.querySelector('.carousel-next');
+    const total = slides.length;
+    let current = 0;
+    let autoTimer = null;
+
+    const goTo = (index) => {
+      current = (index + total) % total;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((dot, i) => {
+        dot.style.opacity = i === current ? '1' : '0.4';
+      });
+    };
+
+    const startAuto = () => {
+      stopAuto();
+      // 5 seconds between slides — comfortable, not rushing
+      autoTimer = setInterval(() => goTo(current + 1), 5000);
+    };
+
+    const stopAuto = () => {
+      if (autoTimer) clearInterval(autoTimer);
+    };
+
+    prevBtn?.addEventListener('click', () => { goTo(current - 1); startAuto(); });
+    nextBtn?.addEventListener('click', () => { goTo(current + 1); startAuto(); });
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => { goTo(Number(dot.dataset.index)); startAuto(); });
+    });
+
+    // Pause on hover
+    carouselEl.addEventListener('mouseenter', stopAuto);
+    carouselEl.addEventListener('mouseleave', startAuto);
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    carouselEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    carouselEl.addEventListener('touchend', e => {
+      const delta = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(delta) > 40) { goTo(delta > 0 ? current + 1 : current - 1); startAuto(); }
+    }, { passive: true });
+
+    startAuto();
+  };
+
+  container.querySelectorAll('.project-carousel').forEach(initCarousel);
 };
