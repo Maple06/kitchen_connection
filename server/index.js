@@ -813,8 +813,8 @@ app.post('/reservations', async (req, res) => {
         });
 
         // Notify admin and superadmin
-        const [superadmins] = await db.query('SELECT email FROM users WHERE role = "superadmin"');
-        const [admins] = await db.query('SELECT email FROM users WHERE role = "admin"');
+        const [superadmins] = await db.query("SELECT email FROM users WHERE role = 'superadmin'");
+        const [admins] = await db.query("SELECT email FROM users WHERE role = 'admin'");
         
         let toEmails = superadmins.map(u => u.email).join(',');
         let ccEmails = admins.map(u => u.email).join(',');
