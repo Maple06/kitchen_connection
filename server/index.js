@@ -116,7 +116,7 @@ app.post('/auth/register', async (req, res) => {
         // Send Email
         const verifyLink = `${FRONTEND_URL}/#/verify?token=${verificationToken}`;
         await transporter.sendMail({
-            from: '"Kitchen Connection" <noreply@kitchenconnection.com>',
+            from: '"Kitchen Connection" <' + (process.env.EMAIL_SENDER || process.env.BREVO_USER) + '>',
             to: email,
             subject: 'Verifikasi Email Anda - Kitchen Connection',
             html: `<p>Halo ${name},</p><p>Terima kasih telah mendaftar. Silakan klik tautan di bawah ini untuk memverifikasi akun Anda:</p><p><a href="${verifyLink}">${verifyLink}</a></p>`
@@ -155,7 +155,7 @@ app.post('/auth/forgot-password', async (req, res) => {
 
         const resetLink = `${FRONTEND_URL}/#/reset-password?token=${resetToken}`;
         await transporter.sendMail({
-            from: '"Kitchen Connection" <noreply@kitchenconnection.com>',
+            from: '"Kitchen Connection" <' + (process.env.EMAIL_SENDER || process.env.BREVO_USER) + '>',
             to: email,
             subject: 'Reset Kata Sandi - Kitchen Connection',
             html: `<p>Halo ${users[0].name},</p><p>Klik tautan di bawah ini untuk mengatur ulang kata sandi Anda:</p><p><a href="${resetLink}">${resetLink}</a></p>`
@@ -226,7 +226,7 @@ app.post('/auth/login', async (req, res) => {
             maxAge: 7 * 24 * 3600000 // 7 days
         });
 
-        res.json({ message: 'Berhasil login', user: { id: user.id, name: user.name, role: user.role } });
+        res.json({ message: 'Berhasil login', user: { id: user.id, name: user.name, email: user.email, role: user.role } });
     } catch (error) {
         res.status(500).json({ message: 'Terjadi kesalahan server. Detail: ' + (error.message || error) });
     }
@@ -289,8 +289,17 @@ app.post('/auth/google', async (req, res) => {
     }
 });
 
-app.get('/auth/me', verifyToken, (req, res) => {
-    res.json({ user: req.user });
+app.get('/auth/me', verifyToken, async (req, res) => {
+    try {
+        const [users] = await db.query('SELECT id, name, email, role FROM users WHERE id = ?', [req.user.id]);
+        if (users.length > 0) {
+            res.json({ user: users[0] });
+        } else {
+            res.status(404).json({ message: 'Pengguna tidak ditemukan' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Terjadi kesalahan server' });
+    }
 });
 
 // --- ADMIN API ---
@@ -501,10 +510,10 @@ app.post('/projects', verifyToken, async (req, res) => {
             );
             
             // Notify Admin
-            const [adminResult] = await db.query('SELECT email FROM users WHERE role = "admin" OR role = "superadmin" LIMIT 1');
+            const [adminResult] = await db.query("SELECT email FROM users WHERE role = 'admin' OR role = 'superadmin' LIMIT 1");
             if (adminResult.length > 0) {
                 await transporter.sendMail({
-                    from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+                    from: '"Kitchen Connection" <' + (process.env.EMAIL_SENDER || process.env.BREVO_USER) + '>',
                     to: adminResult[0].email,
                     subject: `Permintaan Proyek Baru - ${title}`,
                     html: `<p>Ada permintaan proyek baru dari klien: <strong>${req.user.name}</strong></p>
@@ -531,7 +540,7 @@ app.post('/projects', verifyToken, async (req, res) => {
         if (clientResult.length > 0) {
             const client = clientResult[0];
             await transporter.sendMail({
-                from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+                from: '"Kitchen Connection" <' + (process.env.EMAIL_SENDER || process.env.BREVO_USER) + '>',
                 to: client.email,
                 subject: `Proyek Baru: ${title}`,
                 html: `<p>Halo ${client.name},</p>
@@ -571,7 +580,7 @@ app.put('/projects/:id', verifyToken, async (req, res) => {
             if (clientResult.length > 0) {
                 const client = clientResult[0];
                 await transporter.sendMail({
-                    from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+                    from: '"Kitchen Connection" <' + (process.env.EMAIL_SENDER || process.env.BREVO_USER) + '>',
                     to: client.email,
                     subject: `Pembaruan Status Proyek - ${title || oldProject.title}`,
                     html: `<p>Halo ${client.name},</p>
@@ -802,7 +811,7 @@ app.post('/reservations', async (req, res) => {
 
         // Notify client
         await transporter.sendMail({
-            from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+            from: '"Kitchen Connection" <' + (process.env.EMAIL_SENDER || process.env.BREVO_USER) + '>',
             to: client_email,
             subject: 'Konfirmasi Reservasi Konsultasi',
             html: `<p>Halo ${client_name},</p>
@@ -826,7 +835,7 @@ app.post('/reservations', async (req, res) => {
 
         if (toEmails) {
             await transporter.sendMail({
-                from: '"Kitchen Connection" <noreply@kitchenconnection.id>',
+                from: '"Kitchen Connection" <' + (process.env.EMAIL_SENDER || process.env.BREVO_USER) + '>',
                 to: toEmails,
                 cc: ccEmails,
                 subject: 'Reservasi Baru Masuk',
@@ -861,7 +870,9 @@ app.get('/dashboard/client', verifyToken, async (req, res) => {
             documents = docs;
         }
 
-        res.json({ projects, documents });
+        const [reservations] = await db.query('SELECT r.* FROM reservations r JOIN users u ON r.client_email = u.email WHERE u.id = ?', [req.user.id]);
+
+        res.json({ projects, documents, reservations });
     } catch (error) {
         res.status(500).json({ message: 'Gagal mengambil data dashboard Detail: ' + (error.message || error) });
     }

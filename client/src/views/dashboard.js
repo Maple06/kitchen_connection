@@ -81,6 +81,33 @@ export const renderDashboard = async (container) => {
           </form>
         </div>
       `;
+    } else if (!project.pic_name) {
+      // Waiting for admin to assign PIC
+      const hasReservation = data.reservations && data.reservations.length > 0;
+      
+      content.innerHTML = `
+        <div class="bg-white p-10 rounded-xl shadow-sm border border-gray-100 text-center max-w-2xl mx-auto mt-10">
+          <div class="w-20 h-20 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fa-regular fa-clock text-4xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Permintaan Konsultasi Diterima</h2>
+          <p class="text-gray-600 mb-6">Terima kasih, <strong>${window.currentUser.name}</strong>. Permintaan proyek <strong>"${project.title}"</strong> sedang diproses oleh tim kami.</p>
+          
+          ${!hasReservation ? `
+          <div class="mt-4 mb-8 p-6 bg-red-50 border border-red-200 rounded-xl">
+            <p class="text-red-800 font-medium mb-3">Sepertinya Anda belum menentukan jadwal reservasi konsultasi awal.</p>
+            <a href="#reservation?project=${encodeURIComponent(project.title)}" class="inline-block bg-maroon text-white px-6 py-2 rounded-lg font-bold hover:bg-maroon-dark transition-colors shadow-sm">
+              <i class="fa-regular fa-calendar-plus mr-2"></i> Belum reservasi? Reservasi disini!
+            </a>
+          </div>
+          ` : `
+          <div class="text-sm text-gray-500 bg-gray-50 p-4 rounded-lg border border-gray-100 flex items-start text-left">
+            <i class="fa-solid fa-circle-info mt-1 mr-3 text-blue-500 text-lg"></i>
+            <p>Mohon tunggu sejenak. Manajer Proyek (PIC) akan segera ditugaskan dan menghubungi Anda untuk konfirmasi jadwal. Dasbor proyek Anda akan aktif setelah PIC ditentukan.</p>
+          </div>
+          `}
+        </div>
+      `;
     } else {
       content.innerHTML = `
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

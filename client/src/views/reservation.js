@@ -43,6 +43,11 @@ export const renderReservation = async (container) => {
     }
   } catch (_) { /* silently ignore — fallback to no embed */ }
 
+  const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+  const projectParam = urlParams.get('project');
+  const initialNotes = projectParam ? `Proyek: ${projectParam}\n\nKebutuhan detail: ` : '';
+  const initialCount = initialNotes.length;
+
   container.innerHTML = `
     <div class="bg-maroon py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -63,11 +68,11 @@ export const renderReservation = async (container) => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-gray-700 font-medium mb-1">Nama <span class="text-red-500">*</span></label>
-                <input type="text" name="client_name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon">
+                <input type="text" name="client_name" value="${window.currentUser ? window.currentUser.name : ''}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon">
               </div>
               <div>
                 <label class="block text-gray-700 font-medium mb-1">Email <span class="text-red-500">*</span></label>
-                <input type="email" name="client_email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon">
+                <input type="email" name="client_email" value="${(window.currentUser && window.currentUser.email) ? window.currentUser.email : ''}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon">
               </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -78,6 +83,7 @@ export const renderReservation = async (container) => {
               <div>
                 <label class="block text-gray-700 font-medium mb-1">Slot Waktu <span class="text-red-500">*</span></label>
                 <select name="time_slot" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon bg-white">
+                  <option value="" disabled selected>-- Pilih Jam --</option>
                   <option value="09:00 - 10:00">09:00 - 10:00</option>
                   <option value="10:00 - 11:00">10:00 - 11:00</option>
                   <option value="13:00 - 14:00">13:00 - 14:00</option>
@@ -86,8 +92,9 @@ export const renderReservation = async (container) => {
               </div>
             </div>
             <div>
-              <label class="block text-gray-700 font-medium mb-1">Detail Proyek / Catatan</label>
-              <textarea name="notes" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon h-32"></textarea>
+              <label class="block text-gray-700 font-medium mb-1">Detail Proyek / Catatan <span class="text-red-500">*</span></label>
+              <textarea id="res-notes" name="notes" required minlength="50" placeholder="Jelaskan kebutuhan dapur impian Anda secara detail..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-maroon focus:ring-1 focus:ring-maroon h-32">${initialNotes}</textarea>
+              <p class="text-xs text-gray-500 mt-1 text-right"><span id="notes-counter" class="${initialCount >= 50 ? 'text-green-600' : 'text-red-500'} font-bold">${initialCount}</span> / Minimal 50 karakter</p>
             </div>
             <button type="submit" id="res-btn" class="bg-maroon text-white px-6 py-2 rounded-lg font-bold hover:bg-maroon-dark transition-colors">Kirim Permintaan</button>
           </form>
@@ -104,6 +111,23 @@ export const renderReservation = async (container) => {
     showCustomBtn.addEventListener('click', () => {
       customForm.classList.remove('hidden');
       if (calendarView) calendarView.classList.add('hidden');
+    });
+  }
+
+  // Notes Counter Logic
+  const notesArea = document.getElementById('res-notes');
+  const counter = document.getElementById('notes-counter');
+  if (notesArea && counter) {
+    notesArea.addEventListener('input', (e) => {
+      const len = e.target.value.length;
+      counter.textContent = len;
+      if (len >= 50) {
+        counter.classList.remove('text-red-500');
+        counter.classList.add('text-green-600');
+      } else {
+        counter.classList.add('text-red-500');
+        counter.classList.remove('text-green-600');
+      }
     });
   }
 
