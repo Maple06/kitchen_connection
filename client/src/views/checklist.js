@@ -882,10 +882,224 @@ const renderInteraksiQuiz = (hostEl) => {
 };
 
 // ───────────────────────────────────────────────────────────────
+// Quiz 4: Keamanan Pangan & HACCP
+// ───────────────────────────────────────────────────────────────
+const COOKIE_SAFETY = 'kc_quiz_food_safety';
+
+const readSafetyState = () => {
+  const fallback = {
+    pemisahan_bahan: '',
+    labeling: '',
+    suhu_log: '',
+    limbah: '',
+    training_haccp: '',
+    kendala_utama: '',
+  };
+  return { ...fallback, ...readJsonCookie(COOKIE_SAFETY, fallback) };
+};
+
+const validateSafety = (s) => {
+  const issues = [];
+  if (!s.pemisahan_bahan) issues.push('Pemisahan bahan mentah & matang');
+  if (!s.labeling) issues.push('Sistem pelabelan');
+  if (!s.suhu_log) issues.push('Pencatatan suhu');
+  if (!s.limbah) issues.push('Manajemen limbah');
+  if (!s.training_haccp) issues.push('Pelatihan kebersihan');
+  if (!s.kendala_utama) issues.push('Kendala kebersihan utama');
+  return issues;
+};
+
+const computeSafetyRecs = (s) => {
+  const recs = [];
+  const isNo = (v) => v === 'tidak';
+
+  if (isNo(s.pemisahan_bahan) || isNo(s.labeling)) {
+    recs.push('<strong>Risiko Kontaminasi Silang:</strong> Disarankan implementasi standar Food Safety dasar (Color-coding talenan & sistem FIFO/FEFO).');
+  }
+
+  if (isNo(s.suhu_log)) {
+    recs.push('<strong>Kontrol Suhu:</strong> Wajib segera menerapkan log suhu harian untuk chiller dan freezer guna mencegah kerusakan bahan baku.');
+  }
+
+  if (isNo(s.limbah)) {
+    recs.push('<strong>Manajemen Limbah:</strong> Disarankan evaluasi alur pembuangan sampah agar tidak melintasi area prep/masak.');
+  }
+
+  if (isNo(s.training_haccp) || s.kendala_utama === 'konsistensi_staf') {
+    recs.push('<strong>SDM & Konsistensi:</strong> Sangat disarankan untuk mengadakan Food Safety Training rutin bagi seluruh staf dapur.');
+  }
+
+  if (s.kendala_utama === 'hama') {
+    recs.push('<strong>Pest Control:</strong> Disarankan audit sanitasi menyeluruh dan penjadwalan pest control profesional secara berkala.');
+  }
+
+  if (recs.length === 0) {
+    recs.push('<strong>Standar Awal Baik:</strong> Pertahankan konsistensi. Disarankan audit berkala untuk persiapan sertifikasi HACCP/Laik Sehat.');
+  }
+
+  return recs;
+};
+
+const renderSafetyQuiz = (hostEl) => {
+  const state = readSafetyState();
+  hostEl.innerHTML = `
+    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Keamanan Pangan & HACCP</h2>
+        <p class="text-gray-600">Evaluasi standar kebersihan, pencegahan kontaminasi, dan kepatuhan dapur Anda.</p>
+      </div>
+
+      <form data-form class="space-y-8" novalidate>
+        <div class="space-y-6">
+          <h3 class="text-lg font-bold text-gray-900">Penyimpanan & Kontaminasi</h3>
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Pemisahan ketat bahan mentah & matang (kulkas/chiller)? <span class="text-red-500">*</span></label>
+            <div class="space-y-2">
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="pemisahan_bahan" value="ya" class="text-maroon focus:ring-maroon h-4 w-4"><span>Ya, sudah dipisah tegas</span></label>
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="pemisahan_bahan" value="tidak" class="text-maroon focus:ring-maroon h-4 w-4"><span>Belum maksimal / sering campur</span></label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Sistem pelabelan tanggal (FIFO/FEFO) berjalan rutin? <span class="text-red-500">*</span></label>
+            <div class="space-y-2">
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="labeling" value="ya" class="text-maroon focus:ring-maroon h-4 w-4"><span>Ya, selalu dilabeli</span></label>
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="labeling" value="tidak" class="text-maroon focus:ring-maroon h-4 w-4"><span>Tidak konsisten / tidak ada</span></label>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Ada pencatatan log suhu harian untuk Chiller/Freezer? <span class="text-red-500">*</span></label>
+            <div class="space-y-2">
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="suhu_log" value="ya" class="text-maroon focus:ring-maroon h-4 w-4"><span>Ya, dicatat setiap hari</span></label>
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="suhu_log" value="tidak" class="text-maroon focus:ring-maroon h-4 w-4"><span>Belum ada pencatatan tertulis</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <h3 class="text-lg font-bold text-gray-900">Kebersihan & Fasilitas</h3>
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Alur pembuangan limbah terpisah dari area makanan? <span class="text-red-500">*</span></label>
+            <div class="space-y-2">
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="limbah" value="ya" class="text-maroon focus:ring-maroon h-4 w-4"><span>Ya, jalurnya aman</span></label>
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="limbah" value="tidak" class="text-maroon focus:ring-maroon h-4 w-4"><span>Jalur tumpang tindih / rawan kontaminasi</span></label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Staf mendapatkan pelatihan kebersihan pangan (Food Safety)? <span class="text-red-500">*</span></label>
+            <div class="space-y-2">
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="training_haccp" value="ya" class="text-maroon focus:ring-maroon h-4 w-4"><span>Ya, pernah / rutin</span></label>
+              <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"><input type="radio" name="training_haccp" value="tidak" class="text-maroon focus:ring-maroon h-4 w-4"><span>Belum pernah</span></label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-bold mb-2">Tantangan kebersihan / sanitasi terbesar saat ini? <span class="text-red-500">*</span></label>
+            <select name="kendala_utama" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon bg-white">
+              <option value="">Pilih...</option>
+              <option value="konsistensi_staf">Konsistensi staf mematuhi SOP</option>
+              <option value="fasilitas_kurang">Fasilitas (wastafel, alat cuci) kurang memadai</option>
+              <option value="hama">Masalah hama (tikus/kecoa)</option>
+              <option value="layout_buruk">Layout dapur menyulitkan pembersihan</option>
+              <option value="tidak_ada">Tidak ada kendala berarti</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <div data-warning class="hidden mb-4 p-4 rounded-xl border border-amber-200 bg-amber-50 text-amber-900"></div>
+          <button type="submit" class="w-full bg-maroon text-white font-bold py-3 rounded-lg hover:bg-maroon-dark transition-colors shadow-md">Lihat Rekomendasi</button>
+          <button type="button" data-reset class="w-full mt-3 border border-gray-300 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-50 transition-colors">Reset Jawaban</button>
+        </div>
+      </form>
+
+      <div data-result class="hidden mt-8 p-6 bg-green-50 border border-green-200 rounded-xl">
+        <h3 class="text-xl font-bold text-green-800 mb-3"><i class="fa-solid fa-check-circle mr-2"></i> Rekomendasi Food Safety</h3>
+        <div data-result-content class="text-gray-700 space-y-4"></div>
+      </div>
+    </div>
+  `;
+
+  const form = hostEl.querySelector('[data-form]');
+  const warningEl = hostEl.querySelector('[data-warning]');
+  const resetBtn = hostEl.querySelector('[data-reset]');
+  const resultDiv = hostEl.querySelector('[data-result]');
+  const resultContent = hostEl.querySelector('[data-result-content]');
+
+  const applyState = (s) => {
+    const setRadio = (name, value) => {
+      if (!value) return;
+      const el = form.querySelector(`input[name="${name}"][value="${value}"]`);
+      if (el) el.checked = true;
+    };
+    setRadio('pemisahan_bahan', s.pemisahan_bahan);
+    setRadio('labeling', s.labeling);
+    setRadio('suhu_log', s.suhu_log);
+    setRadio('limbah', s.limbah);
+    setRadio('training_haccp', s.training_haccp);
+    if (s.kendala_utama) {
+      const sel = form.querySelector('select[name="kendala_utama"]');
+      if (sel) sel.value = s.kendala_utama;
+    }
+  };
+  applyState(state);
+
+  const sync = () => {
+    const data = new FormData(form);
+    const next = {
+      pemisahan_bahan: data.get('pemisahan_bahan') || '',
+      labeling: data.get('labeling') || '',
+      suhu_log: data.get('suhu_log') || '',
+      limbah: data.get('limbah') || '',
+      training_haccp: data.get('training_haccp') || '',
+      kendala_utama: data.get('kendala_utama') || '',
+    };
+    writeJsonCookie(COOKIE_SAFETY, next);
+    return next;
+  };
+
+  form.addEventListener('change', () => {
+    sync();
+    warningEl.classList.add('hidden');
+    resultDiv.classList.add('hidden');
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const next = sync();
+    const issues = validateSafety(next);
+    if (issues.length > 0) {
+      renderWarning(warningEl, issues);
+      resultDiv.classList.add('hidden');
+      return;
+    }
+    const recs = computeSafetyRecs(next);
+    renderRecommendationList(resultContent, recs);
+    resultDiv.classList.remove('hidden');
+  });
+
+  resetBtn.addEventListener('click', () => {
+    writeJsonCookie(COOKIE_SAFETY, {
+      pemisahan_bahan: '',
+      labeling: '',
+      suhu_log: '',
+      limbah: '',
+      training_haccp: '',
+      kendala_utama: '',
+    });
+    form.reset();
+    warningEl.classList.add('hidden');
+    resultDiv.classList.add('hidden');
+  });
+};
+
+// ───────────────────────────────────────────────────────────────
 // Page wrapper: choose quiz (separate)
 // ───────────────────────────────────────────────────────────────
 const COOKIE_ACTIVE_QUIZ = 'kc_quiz_active';
-const QUIZ_ORDER = ['consultasi', 'workflow', 'interaksi'];
+const QUIZ_ORDER = ['consultasi', 'workflow', 'interaksi', 'safety'];
 
 const readActiveQuiz = () => {
   const q = getCookie(COOKIE_ACTIVE_QUIZ);
@@ -907,11 +1121,12 @@ export const renderChecklist = (container) => {
     <div class="max-w-3xl mx-auto px-4 py-12">
       <!-- Quiz Selector (separate quizzes) -->
       <div class="mb-8" role="tablist" aria-label="Pilih Topik">
-        <div class="relative w-full rounded-xl border border-gray-200 bg-gray-50 p-1 grid grid-cols-3">
-          <div id="kc-quiz-indicator" class="absolute top-1 bottom-1 left-1 rounded-lg bg-maroon transition-transform duration-300 ease-out" style="width: calc((100% - 0.5rem) / 3); transform: translateX(0%);"></div>
-          <button type="button" class="kc-quiz-tab relative z-10 px-3 py-2 rounded-lg text-sm sm:text-base font-semibold transition-colors" data-quiz="consultasi" role="tab" aria-selected="true">Jenis Bisnis</button>
-          <button type="button" class="kc-quiz-tab relative z-10 px-3 py-2 rounded-lg text-sm sm:text-base font-semibold transition-colors" data-quiz="workflow" role="tab" aria-selected="false">Alur Kerja & Ventilasi</button>
-          <button type="button" class="kc-quiz-tab relative z-10 px-3 py-2 rounded-lg text-sm sm:text-base font-semibold transition-colors" data-quiz="interaksi" role="tab" aria-selected="false">Operasional</button>
+        <div class="relative w-full rounded-xl border border-gray-200 bg-gray-50 p-1 grid grid-cols-4">
+          <div id="kc-quiz-indicator" class="absolute top-1 bottom-1 left-1 rounded-lg bg-maroon transition-transform duration-300 ease-out" style="width: calc((100% - 0.5rem) / 4); transform: translateX(0%);"></div>
+          <button type="button" class="kc-quiz-tab relative z-10 px-2 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors" data-quiz="consultasi" role="tab" aria-selected="true">Jenis Bisnis</button>
+          <button type="button" class="kc-quiz-tab relative z-10 px-2 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors" data-quiz="workflow" role="tab" aria-selected="false">Alur Kerja</button>
+          <button type="button" class="kc-quiz-tab relative z-10 px-2 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors" data-quiz="interaksi" role="tab" aria-selected="false">Operasional</button>
+          <button type="button" class="kc-quiz-tab relative z-10 px-2 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors" data-quiz="safety" role="tab" aria-selected="false">Food Safety</button>
         </div>
       </div>
 
@@ -940,7 +1155,8 @@ export const renderChecklist = (container) => {
     host.innerHTML = '';
     if (normalizedQuizId === 'consultasi') renderConsultQuiz(host);
     else if (normalizedQuizId === 'workflow') renderWorkflowQuiz(host);
-    else renderInteraksiQuiz(host);
+    else if (normalizedQuizId === 'interaksi') renderInteraksiQuiz(host);
+    else renderSafetyQuiz(host);
   };
 
   quizTabs.forEach(btn => btn.addEventListener('click', () => setActiveQuiz(btn.dataset.quiz)));
